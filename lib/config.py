@@ -29,45 +29,45 @@ MAX_INT = 2**63 - 1
 
 
 # Bitcoin Core
-OP_RETURN_MAX_SIZE = 40 # bytes
+OP_RETURN_MAX_SIZE = 80 # bytes
 
 
 # Currency agnosticism
 BTC = 'BTC'
-XCP = 'XCP'
+XCP = 'XCH'
 
-BTC_NAME = 'Bitcoin'
-BTC_CLIENT = 'bitcoind'
-XCP_NAME = 'Counterparty'
-XCP_CLIENT = 'counterpartyd'
+BTC_NAME = 'Viacoin'
+BTC_CLIENT = 'viacoind'
+XCP_NAME = 'ClearingHouse'
+XCP_CLIENT = 'clearinghoused'
 
 DEFAULT_RPC_PORT_TESTNET = 14000
 DEFAULT_RPC_PORT = 4000
 
-DEFAULT_BACKEND_RPC_PORT_TESTNET = 18332
-DEFAULT_BACKEND_RPC_PORT = 8332
+DEFAULT_BACKEND_RPC_PORT_TESTNET = 25222
+DEFAULT_BACKEND_RPC_PORT = 5222
 
-UNSPENDABLE_TESTNET = 'mvCounterpartyXXXXXXXXXXXXXXW24Hef'
-UNSPENDABLE_MAINNET = '1CounterpartyXXXXXXXXXXXXXXXUWLpVr'
+UNSPENDABLE_TESTNET = 'tClearingHouseXXXXXXXXXXXXXXW24Hef'
+UNSPENDABLE_MAINNET = '1ClearingHouseXXXXXXXXXXXXXXUWLpVr'
 
-ADDRESSVERSION_TESTNET = b'\x6f'
+ADDRESSVERSION_TESTNET = b'\x7f'
 # PRIVATEKEY_VERSION_TESTNET =
-ADDRESSVERSION_MAINNET = b'\x00'
+ADDRESSVERSION_MAINNET = b'\x47'
 # PRIVATEKEY_VERSION_MAINNET =
-MAGIC_BYTES_TESTNET = b'\xfa\xbf\xb5\xda'   # For bip-0010
-MAGIC_BYTES_MAINNET = b'\xf9\xbe\xb4\xd9'   # For bip-0010
+MAGIC_BYTES_TESTNET = b'\xa9\xc5\xef\x92'   # For bip-0010
+MAGIC_BYTES_MAINNET = b'\x0f\x68\xc6\xcb'   # For bip-0010
 
-BLOCK_FIRST_TESTNET_TESTCOIN = 154908
-BURN_START_TESTNET_TESTCOIN = 154908
-BURN_END_TESTNET_TESTCOIN = 4017708     # Fifty years, at ten minutes per block.
+BLOCK_FIRST_TESTNET_TESTCOIN = 40000
+BURN_START_TESTNET_TESTCOIN = 40000
+BURN_END_TESTNET_TESTCOIN = 65700000     # Fifty years
 
-BLOCK_FIRST_TESTNET = 154908
-BURN_START_TESTNET = 154908
-BURN_END_TESTNET = 4017708              # Fifty years, at ten minutes per block.
+BLOCK_FIRST_TESTNET = 40000
+BURN_START_TESTNET = 40000
+BURN_END_TESTNET = 65700000              # Fifty years
 
 BLOCK_FIRST_MAINNET_TESTCOIN = 278270
 BURN_START_MAINNET_TESTCOIN = 278310
-BURN_END_MAINNET_TESTCOIN = 2500000     # A long time.
+BURN_END_MAINNET_TESTCOIN = 65700000     # A long time
 
 BLOCK_FIRST_MAINNET = 278270
 BURN_START_MAINNET = 278310
@@ -78,10 +78,10 @@ BURN_END_MAINNET = 283810
 # NOTE: If the DUST_SIZE constants are changed, they MUST also be changed in counterblockd/lib/config.py as well
     # TODO: This should be updated, given their new configurability.
 # TODO: The dust values should be lowered by 90%, once transactions with smaller outputs start confirming faster: <https://github.com/mastercoin-MSC/spec/issues/192>
-DEFAULT_REGULAR_DUST_SIZE = 5430         # TODO: This is just a guess. I got it down to 5530 satoshis.
+DEFAULT_REGULAR_DUST_SIZE = 5460         # TODO: This is just a guess. I got it down to 5530 satoshis.
 DEFAULT_MULTISIG_DUST_SIZE = 7800        # <https://bitcointalk.org/index.php?topic=528023.msg7469941#msg7469941>
 DEFAULT_OP_RETURN_VALUE = 0
-DEFAULT_FEE_PER_KB = 10000                # Bitcoin Core default is 10000.  # TODO: Lower 10x later, too.
+DEFAULT_FEE_PER_KB = 100000                # Bitcoin Core default is 10000.  # TODO: Lower 10x later, too.
 
 
 # UI defaults
