@@ -48,7 +48,7 @@ DEFAULT_BACKEND_RPC_PORT_TESTNET = 25222
 DEFAULT_BACKEND_RPC_PORT = 5222
 
 UNSPENDABLE_TESTNET = 'tClearingHouseXXXXXXXXXXXXXXW24Hef'
-UNSPENDABLE_MAINNET = '1ClearingHouseXXXXXXXXXXXXXXUWLpVr'
+UNSPENDABLE_MAINNET = 'VClearingHouseXXXXXXXXXXXXXXUWLpVr'
 
 ADDRESSVERSION_TESTNET = b'\x7f'
 # PRIVATEKEY_VERSION_TESTNET =
@@ -57,31 +57,31 @@ ADDRESSVERSION_MAINNET = b'\x47'
 MAGIC_BYTES_TESTNET = b'\xa9\xc5\xef\x92'   # For bip-0010
 MAGIC_BYTES_MAINNET = b'\x0f\x68\xc6\xcb'   # For bip-0010
 
-BLOCK_FIRST_TESTNET_TESTCOIN = 40000
-BURN_START_TESTNET_TESTCOIN = 40000
+BLOCK_FIRST_TESTNET_TESTCOIN = 50000
+BURN_START_TESTNET_TESTCOIN = 50000
 BURN_END_TESTNET_TESTCOIN = 65700000     # Fifty years
 
-BLOCK_FIRST_TESTNET = 40000
-BURN_START_TESTNET = 40000
+BLOCK_FIRST_TESTNET = 50000
+BURN_START_TESTNET = 50000
 BURN_END_TESTNET = 65700000              # Fifty years
 
-BLOCK_FIRST_MAINNET_TESTCOIN = 278270
-BURN_START_MAINNET_TESTCOIN = 278310
+BLOCK_FIRST_MAINNET_TESTCOIN = 88525
+BURN_START_MAINNET_TESTCOIN = 88525
 BURN_END_MAINNET_TESTCOIN = 65700000     # A long time
 
-BLOCK_FIRST_MAINNET = 278270
-BURN_START_MAINNET = 278310
-BURN_END_MAINNET = 283810
+BLOCK_FIRST_MAINNET = 88525
+BURN_START_MAINNET = 88525
+BURN_END_MAINNET = 203725
 
 
 # Protocol defaults
-# NOTE: If the DUST_SIZE constants are changed, they MUST also be changed in counterblockd/lib/config.py as well
+# NOTE: If the DUST_SIZE constants are changed, they MUST also be changed in xchblockd/lib/config.py as well
     # TODO: This should be updated, given their new configurability.
 # TODO: The dust values should be lowered by 90%, once transactions with smaller outputs start confirming faster: <https://github.com/mastercoin-MSC/spec/issues/192>
 DEFAULT_REGULAR_DUST_SIZE = 5460         # TODO: This is just a guess. I got it down to 5530 satoshis.
 DEFAULT_MULTISIG_DUST_SIZE = 7800        # <https://bitcointalk.org/index.php?topic=528023.msg7469941#msg7469941>
 DEFAULT_OP_RETURN_VALUE = 0
-DEFAULT_FEE_PER_KB = 100000                # Bitcoin Core default is 10000.  # TODO: Lower 10x later, too.
+DEFAULT_FEE_PER_KB = 100000              # Viacoin Core default is 100000.
 
 
 # UI defaults
