@@ -249,7 +249,7 @@ def match (db, tx):
     tx1_wager_remaining = tx1['wager_remaining']
     tx1_counterwager_remaining = tx1['counterwager_remaining']
     bet_matches = cursor.fetchall()
-    if tx['block_index'] > 284500 or config.TESTNET:  # Protocol change.
+    if tx['block_index'] > 50200 or config.TESTNET:  # Protocol change.
         sorted(bet_matches, key=lambda x: x['tx_index'])                                        # Sort by tx index second.
         sorted(bet_matches, key=lambda x: util.price(x['wager_quantity'], x['counterwager_quantity'], tx1['block_index']))   # Sort by price first.
 
@@ -292,7 +292,7 @@ def match (db, tx):
         tx0_inverse_odds = util.price(tx0['counterwager_quantity'], tx0['wager_quantity'], tx1['block_index'])
         tx1_odds = util.price(tx1['wager_quantity'], tx1['counterwager_quantity'], tx1['block_index'])
 
-        if tx['block_index'] < 286000: tx0_inverse_odds = util.price(1, tx0_odds, tx1['block_index']) # Protocol change.
+        if tx['block_index'] < 50300: tx0_inverse_odds = util.price(1, tx0_odds, tx1['block_index']) # Protocol change.
 
         logging.debug('Tx0 Inverse Odds: {}; Tx1 Odds: {}'.format(float(tx0_inverse_odds), float(tx1_odds)))
         if tx0_inverse_odds <= tx1_odds:
@@ -305,7 +305,7 @@ def match (db, tx):
             if not forward_quantity:
                 logging.debug('Skipping: zero forward quantity.')
                 continue
-            if tx1['block_index'] >= 286500 or config.TESTNET:    # Protocol change.
+            if tx1['block_index'] >= 50400 or config.TESTNET:    # Protocol change.
                 if not backward_quantity:
                     logging.debug('Skipping: zero backward quantity.')
                     continue
@@ -335,7 +335,7 @@ def match (db, tx):
             cursor.execute(sql, bindings)
             util.message(db, tx1['block_index'], 'update', 'bets', bindings)
 
-            if tx1['block_index'] >= 292000 or config.TESTNET:  # Protocol change
+            if tx1['block_index'] >= 50800 or config.TESTNET:  # Protocol change
                 if tx1_wager_remaining <= 0 or tx1_counterwager_remaining <= 0:
                     # Fill order, and recredit give_remaining.
                     tx1_status = 'filled'

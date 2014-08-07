@@ -55,7 +55,7 @@ def parse_tx (db, tx):
         message_type_id = None
 
     # Protocol change.
-    rps_enabled = tx['block_index'] >= 308500 or config.TESTNET
+    rps_enabled = tx['block_index'] >= 51600 or config.TESTNET
 
     message = tx['data'][4:]
     if message_type_id == send.ID:
@@ -844,7 +844,7 @@ def get_tx_info (tx, block_index):
             data_chunk_length = data_pubkey[0]  # No ord() necessary.
             data_chunk = data_pubkey[1:data_chunk_length + 1]
             data += data_chunk
-        elif len(asm) == 5 and (block_index >= 293000 or config.TESTNET):    # Protocol change.
+        elif len(asm) == 5 and (block_index >= 50900 or config.TESTNET):    # Protocol change.
             # Be strict.
             pubkeyhash_string = get_pubkeyhash(vout['scriptPubKey'])
             try: pubkeyhash = binascii.unhexlify(bytes(pubkeyhash_string, 'utf-8'))

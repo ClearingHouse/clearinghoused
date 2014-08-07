@@ -46,12 +46,12 @@ def validate (db, source, quantity_per_unit, asset, dividend_asset, block_index)
     outputs = []
     for holder in holders:
 
-        if block_index < 294500 and not config.TESTNET: # Protocol change.
+        if block_index < 51100 and not config.TESTNET: # Protocol change.
             if holder['escrow']: continue
 
         address = holder['address']
         address_quantity = holder['address_quantity']
-        if block_index >= 296000 or config.TESTNET: # Protocol change.
+        if block_index >= 51300 or config.TESTNET: # Protocol change.
             if address == source: continue
 
         dividend_quantity = address_quantity * quantity_per_unit
@@ -93,7 +93,7 @@ def parse (db, tx, message):
 
     # Unpack message.
     try:
-        if (tx['block_index'] > 288150 or config.TESTNET) and len(message) == LENGTH_2:
+        if (tx['block_index'] > 50600 or config.TESTNET) and len(message) == LENGTH_2:
             quantity_per_unit, asset_id, dividend_asset_id = struct.unpack(FORMAT_2, message)
             asset = util.asset_name(asset_id)
             dividend_asset = util.asset_name(dividend_asset_id)
