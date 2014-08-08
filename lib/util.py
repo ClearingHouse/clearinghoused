@@ -51,7 +51,7 @@ def api (method, params):
         raise exceptions.RPCError('{}'.format(response_json['error']))
 
 def price (numerator, denominator, block_index):
-    if block_index >= 294500 or config.TESTNET: # Protocol change.
+    if block_index >= 51100 or config.TESTNET: # Protocol change.
         return fractions.Fraction(numerator, denominator)
     else:
         numerator = D(numerator)
