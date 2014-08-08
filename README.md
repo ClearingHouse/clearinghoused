@@ -117,14 +117,14 @@ The following examples are abridged for parsimony.
 	
 	```
 	order --source=ttQheFaSfWELRB2MyMBaiWjdDm6ux9Ezns --get-quantity=10 --get-asset=VIA
-	--give-quantity=20 --give-asset=XCH --expiration=10 --fee_required=.001
+	--give-quantity=20 --give-asset=XCH --expiration=10 --fee=.001
 	```
 
 * Buy BBBC for VIA
 
 	```
 	order --source=ttQheFaSfWELRB2MyMBaiWjdDm6ux9Ezns --get-quantity=10 --get-asset=BBBC
-	--give-quantity=20 --give-asset=VIA --expiration=10 --fee_provided=0.001
+	--give-quantity=20 --give-asset=VIA --expiration=10 --fee=0.001
 	```
 
 * Buy XCH for BBBC
@@ -135,7 +135,7 @@ The following examples are abridged for parsimony.
 
 * VIAPay
 	```
-	VIApay --source=-source=ttQheFaSfWELRB2MyMBaiWjdDm6ux9Ezns --order-match-id=092f15d36786136c4d868c33356ec3c9b5a0c77de54ed0e96a8dbdd8af160c23
+	VIApay --source=ttQheFaSfWELRB2MyMBaiWjdDm6ux9Ezns --order-match-id=092f15d36786136c4d868c33356ec3c9b5a0c77de54ed0e96a8dbdd8af160c23
 	```
 
 * Issue
