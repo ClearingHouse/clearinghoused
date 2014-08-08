@@ -404,9 +404,9 @@ def transaction (tx_info, encoding='auto', fee_per_kb=config.DEFAULT_FEE_PER_KB,
     # Data encoding methods.
     if data:
         if encoding == 'auto':
-            if len(data) <= 40:
-                # encoding = 'opreturn'
-                encoding = 'multisig'   # BTCGuild isn’t mining OP_RETURN?!
+            if len(data) <= 80:
+                encoding = 'opreturn'
+                #encoding = 'multisig'   # BTCGuild isn’t mining OP_RETURN?!
             else:
                 encoding = 'multisig'
 
@@ -530,7 +530,7 @@ def transaction (tx_info, encoding='auto', fee_per_kb=config.DEFAULT_FEE_PER_KB,
 
         # Check if good.
         change_quantity = btc_in - (btc_out + final_fee)
-        logging.debug('Change quantity: {} BTC'.format(change_quantity / config.UNIT))
+        logging.debug('Change quantity: {} VIA'.format(change_quantity / config.UNIT))
         if change_quantity == 0 or change_quantity >= regular_dust_size: # If change is necessary, must not be a dust output.
             sufficient_funds = True
             break

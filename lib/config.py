@@ -33,7 +33,7 @@ OP_RETURN_MAX_SIZE = 80 # bytes
 
 
 # Currency agnosticism
-BTC = 'BTC'
+BTC = 'VIA'
 XCP = 'XCH'
 
 BTC_NAME = 'Viacoin'

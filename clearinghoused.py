@@ -648,14 +648,14 @@ if __name__ == '__main__':
     parser_rps.add_argument('--move', type=int, required=True, help='the selected move')
     parser_rps.add_argument('--possible-moves', type=int, required=True, help='the number of possible moves (odd number greater or equal than 3)')
     parser_rps.add_argument('--expiration', type=int, required=True, help='the number of blocks for which the bet should be valid')
-    parser_rps.add_argument('--fee', help='the exact BTC fee to be paid to miners')
+    parser_rps.add_argument('--fee', help='the exact VIA fee to be paid to miners')
 
     parser_rpsresolve = subparsers.add_parser('rpsresolve', help='resolve a rock-paper-scissors like game')
     parser_rpsresolve.add_argument('--source', required=True, help='the source address')
     parser_rpsresolve.add_argument('--random', type=str, required=True, help='the random number used in the corresponding rps transaction')
     parser_rpsresolve.add_argument('--move', type=int, required=True, help='the selected move in the corresponding rps transaction')
     parser_rpsresolve.add_argument('--rps-match-id', required=True, help='the concatenation of the hashes of the two transactions which compose the rps match')
-    parser_rpsresolve.add_argument('--fee', help='the exact BTC fee to be paid to miners')
+    parser_rpsresolve.add_argument('--fee', help='the exact VIA fee to be paid to miners')
 
     parser_publish = subparsers.add_parser('publish', help='publish arbitrary data in the blockchain')
     parser_publish.add_argument('--source', required=True, help='the source address')
@@ -950,7 +950,7 @@ if __name__ == '__main__':
            args.unsigned)
 
     elif args.action == 'rpsresolve':
-        if args.fee: args.fee = util.devise(db, args.fee, 'BTC', 'input')
+        if args.fee: args.fee = util.devise(db, args.fee, 'VIA', 'input')
         cli('create_rpsresolve', {'source': args.source,
                                 'random': args.random, 'move': args.move,
                                 'rps_match_id': args.rps_match_id, 'fee': args.fee,
@@ -963,7 +963,7 @@ if __name__ == '__main__':
            args.unsigned)
 
     elif args.action == 'publish':
-        if args.fee: args.fee = util.devise(db, args.fee, 'BTC', 'input')
+        if args.fee: args.fee = util.devise(db, args.fee, 'VIA', 'input')
         cli('create_publish', {'source': args.source,
                                'data_hex': args.data_hex, 'fee': args.fee,
                                'allow_unconfirmed_inputs': args.unconfirmed,
