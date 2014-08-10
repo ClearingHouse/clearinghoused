@@ -67,14 +67,14 @@ def parse (db, tx, message=None):
         cursor.execute('''SELECT * FROM burns WHERE (status = ? AND source = ?)''', ('valid', tx['source']))
         burns = cursor.fetchall()
         already_burned = sum([burn['burned'] for burn in burns])
-        ONE = 1 * config.UNIT
+        ONE = 10000 * config.UNIT
         max_burn = ONE - already_burned
         if sent > max_burn: burned = max_burn   # Exceeded maximum burn; earn what you can.
         else: burned = sent
 
         total_time = config.BURN_END - config.BURN_START
         partial_time = config.BURN_END - tx['block_index']
-        multiplier = (1000 + (500 * Fraction(partial_time, total_time)))
+        multiplier = (50 + (50 * Fraction(partial_time, total_time)))
         earned = round(burned * multiplier)
 
         # Credit source address with earned XCP.
