@@ -42,8 +42,8 @@ def compose (db, source, quantity, overburn=False):
     # Check that a maximum of 1 BTC total is burned per address.
     burns = list(cursor.execute('''SELECT * FROM burns WHERE (status = ? AND source = ?)''', ('valid', source)))
     already_burned = sum([burn['burned'] for burn in burns])
-    if quantity > (10000 * config.UNIT - already_burned) and not overburn:
-        raise exceptions.BurnError('10000 {} may be burned per address'.format(config.BTC))
+    if quantity > (21000 * config.UNIT - already_burned) and not overburn:
+        raise exceptions.BurnError('21000 {} may be burned per address'.format(config.BTC))
 
     cursor.close()
     return (source, [(destination, quantity)], None)
@@ -67,14 +67,14 @@ def parse (db, tx, message=None):
         cursor.execute('''SELECT * FROM burns WHERE (status = ? AND source = ?)''', ('valid', tx['source']))
         burns = cursor.fetchall()
         already_burned = sum([burn['burned'] for burn in burns])
-        ONE = 10000 * config.UNIT
+        ONE = 21000 * config.UNIT
         max_burn = ONE - already_burned
         if sent > max_burn: burned = max_burn   # Exceeded maximum burn; earn what you can.
         else: burned = sent
 
         total_time = config.BURN_END - config.BURN_START
         partial_time = config.BURN_END - tx['block_index']
-        multiplier = (50 + (50 * Fraction(partial_time, total_time)))
+        multiplier = (85 + (15 * Fraction(partial_time, total_time)))
         earned = round(burned * multiplier)
 
         # Credit source address with earned XCP.
