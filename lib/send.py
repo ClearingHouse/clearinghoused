@@ -14,7 +14,7 @@ ID = 0
 def validate (db, source, destination, asset, quantity):
     problems = []
 
-    if asset == config.BTC: problems.append('cannot send bitcoins')  # Only for parsing.
+    if asset == config.BTC: problems.append('cannot send viacoins')  # Only for parsing.
 
     if not isinstance(quantity, int):
         problems.append('quantity must be in satoshis')

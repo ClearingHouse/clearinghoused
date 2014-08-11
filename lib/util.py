@@ -482,7 +482,7 @@ def debit (db, block_index, address, asset, quantity, action=None, event=None):
     assert quantity >= 0
 
     if asset == config.BTC:
-        raise exceptions.BalanceError('Cannot debit bitcoins from a {} address!'.format(config.XCP_NAME))
+        raise exceptions.BalanceError('Cannot debit viacoins from a {} address!'.format(config.XCP_NAME))
 
     debit_cursor.execute('''SELECT * FROM balances \
                             WHERE (address = ? AND asset = ?)''', (address, asset))
