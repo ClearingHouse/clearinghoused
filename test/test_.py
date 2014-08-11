@@ -443,38 +443,38 @@ def test_counter_rpsresolve ():
 def test_rps_expiration ():
     unsigned_tx_hex = bitcoin.transaction(rps.compose(db, source_default, 5, 11021663, move_random_hash_default, 10), encoding='multisig')
     tx_rps = parse_hex(unsigned_tx_hex)
-    check_movment(db, 'debit', tx_rps['block_index'], source_default, 'XCP', 11021663, tx_rps['tx_hash'])
+    check_movment(db, 'debit', tx_rps['block_index'], source_default, 'XCH', 11021663, tx_rps['tx_hash'])
 
     block_progress(15)
     expiration_block = tx_rps['block_index']+11
 
     # re-credit expired rps
-    check_movment(db, 'credit', expiration_block, source_default, 'XCP', 11021663, tx_rps['tx_hash'])
+    check_movment(db, 'credit', expiration_block, source_default, 'XCH', 11021663, tx_rps['tx_hash'])
 
 def test_pending_rps_match_expiration ():
     unsigned_tx_hex = bitcoin.transaction(rps.compose(db, source_default, 5, 11021664, move_random_hash_default, 10), encoding='multisig')
     rps1 = parse_hex(unsigned_tx_hex)
-    check_movment(db, 'debit', rps1['block_index'], source_default, 'XCP', 11021664, rps1['tx_hash'])
+    check_movment(db, 'debit', rps1['block_index'], source_default, 'XCH', 11021664, rps1['tx_hash'])
 
     unsigned_tx_hex = bitcoin.transaction(rps.compose(db, destination_default, 5, 11021664, move_random_hash_default, 10), encoding='multisig')
     rps2 = parse_hex(unsigned_tx_hex)
-    check_movment(db, 'debit', rps2['block_index'], destination_default, 'XCP', 11021664, rps2['tx_hash'])
+    check_movment(db, 'debit', rps2['block_index'], destination_default, 'XCH', 11021664, rps2['tx_hash'])
 
     block_progress(25)
     expiration_block = rps2['block_index']+21
 
     # re-credit expired rps
-    check_movment(db, 'credit', expiration_block, source_default, 'XCP', 11021664, rps1['tx_hash'] + rps2['tx_hash'])
-    check_movment(db, 'credit', expiration_block, destination_default, 'XCP', 11021664, rps1['tx_hash'] + rps2['tx_hash'])
+    check_movment(db, 'credit', expiration_block, source_default, 'XCH', 11021664, rps1['tx_hash'] + rps2['tx_hash'])
+    check_movment(db, 'credit', expiration_block, destination_default, 'XCH', 11021664, rps1['tx_hash'] + rps2['tx_hash'])
 
 def test_pending_and_resolved_rps_match_expiration ():
     unsigned_tx_hex = bitcoin.transaction(rps.compose(db, source_default, 5, 11021665, move_random_hash_default, 10), encoding='multisig')
     rps1 = parse_hex(unsigned_tx_hex)
-    check_movment(db, 'debit', rps1['block_index'], source_default, 'XCP', 11021665, rps1['tx_hash'])
+    check_movment(db, 'debit', rps1['block_index'], source_default, 'XCH', 11021665, rps1['tx_hash'])
 
     unsigned_tx_hex = bitcoin.transaction(rps.compose(db, destination_default, 5, 11021665, move_random_hash_default, 10), encoding='multisig')
     rps2 = parse_hex(unsigned_tx_hex)
-    check_movment(db, 'debit', rps2['block_index'], destination_default, 'XCP', 11021665, rps2['tx_hash'])
+    check_movment(db, 'debit', rps2['block_index'], destination_default, 'XCH', 11021665, rps2['tx_hash'])
 
     rps_match_id = rps1['tx_hash'] + rps2['tx_hash']
     unsigned_tx_hex = bitcoin.transaction(rpsresolve.compose(db, source_default, 3, rps_random_default, rps_match_id), encoding='multisig')
@@ -484,7 +484,7 @@ def test_pending_and_resolved_rps_match_expiration ():
     expiration_block = rps_match['block_index']+20
     
     # resolved game wins
-    check_movment(db, 'credit', expiration_block, source_default, 'XCP', 2 * 11021665, rps_match_id)
+    check_movment(db, 'credit', expiration_block, source_default, 'XCH', 2 * 11021665, rps_match_id)
 
 
 def test_json_rpc():

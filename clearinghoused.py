@@ -78,7 +78,7 @@ def format_bet (bet):
     if not bet['leverage']: leverage = None
     else: leverage = util.devise(db, D(bet['leverage']) / 5040, 'leverage', 'output')
 
-    return [util.BET_TYPE_NAME[bet['bet_type']], bet['feed_address'], util.isodt(bet['deadline']), target_value, leverage, str(bet['wager_remaining'] / config.UNIT) + ' XCP', util.devise(db, odds, 'odds', 'output'), bet['expire_index'] - util.last_block(db)['block_index'], bet['tx_hash']]
+    return [util.BET_TYPE_NAME[bet['bet_type']], bet['feed_address'], util.isodt(bet['deadline']), target_value, leverage, str(bet['wager_remaining'] / config.UNIT) + ' XCH', util.devise(db, odds, 'odds', 'output'), bet['expire_index'] - util.last_block(db)['block_index'], bet['tx_hash']]
 
 def format_order_match (db, order_match):
     order_match_id = order_match['tx0_hash'] + order_match['tx1_hash']
@@ -596,7 +596,7 @@ if __name__ == '__main__':
     parser_issuance.add_argument('--divisible', action='store_true', help='whether or not the asset is divisible (must agree with previous issuances)')
     parser_issuance.add_argument('--callable', dest='callable_', action='store_true', help='whether or not the asset is callable (must agree with previous issuances)')
     parser_issuance.add_argument('--call-date', help='the date from which a callable asset may be called back (must agree with previous issuances)')
-    parser_issuance.add_argument('--call-price', help='the price, in XCP per whole unit, at which a callable asset may be called back (must agree with previous issuances)')
+    parser_issuance.add_argument('--call-price', help='the price, in XCH per whole unit, at which a callable asset may be called back (must agree with previous issuances)')
     parser_issuance.add_argument('--description', type=str, required=True, help='a description of the asset (set to ‘LOCK’ to lock against further issuances with non‐zero quantitys)')
     parser_issuance.add_argument('--fee', help='the exact {} fee to be paid to miners'.format(config.BTC))
 
@@ -612,8 +612,8 @@ if __name__ == '__main__':
     parser_bet.add_argument('--feed-address', required=True, help='the address which publishes the feed to bet on')
     parser_bet.add_argument('--bet-type', choices=list(util.BET_TYPE_NAME.values()), required=True, help='choices: {}'.format(list(util.BET_TYPE_NAME.values())))
     parser_bet.add_argument('--deadline', required=True, help='the date and time at which the bet should be decided/settled')
-    parser_bet.add_argument('--wager', required=True, help='the quantity of XCP to wager')
-    parser_bet.add_argument('--counterwager', required=True, help='the minimum quantity of XCP to be wagered by the user to bet against you, if he were to accept the whole thing')
+    parser_bet.add_argument('--wager', required=True, help='the quantity of XCH to wager')
+    parser_bet.add_argument('--counterwager', required=True, help='the minimum quantity of XCH to be wagered by the user to bet against you, if he were to accept the whole thing')
     parser_bet.add_argument('--target-value', default=0.0, help='target value for Equal/NotEqual bet')
     parser_bet.add_argument('--leverage', type=int, default=5040, help='leverage, as a fraction of 5040')
     parser_bet.add_argument('--expiration', type=int, required=True, help='the number of blocks for which the bet should be valid')
@@ -621,12 +621,12 @@ if __name__ == '__main__':
 
     parser_dividend = subparsers.add_parser('dividend', help='pay dividends to the holders of an asset (in proportion to their stake in it)')
     parser_dividend.add_argument('--source', required=True, help='the source address')
-    parser_dividend.add_argument('--quantity-per-unit', required=True, help='the quantity of XCP to be paid per whole unit held of ASSET')
+    parser_dividend.add_argument('--quantity-per-unit', required=True, help='the quantity of XCH to be paid per whole unit held of ASSET')
     parser_dividend.add_argument('--asset', required=True, help='the asset to which pay dividends')
     parser_dividend.add_argument('--dividend-asset', required=True, help='asset in which to pay the dividends')
     parser_dividend.add_argument('--fee', help='the exact {} fee to be paid to miners'.format(config.BTC))
 
-    parser_burn = subparsers.add_parser('burn', help='destroy {} tm earn XCP, during an initial period of time')
+    parser_burn = subparsers.add_parser('burn', help='destroy {} tm earn XCH, during an initial period of time')
     parser_burn.add_argument('--source', required=True, help='the source address')
     parser_burn.add_argument('--quantity', required=True, help='quantity of {} to be destroyed'.format(config.BTC))
     parser_burn.add_argument('--fee', help='the exact {} fee to be paid to miners'.format(config.BTC))
@@ -644,7 +644,7 @@ if __name__ == '__main__':
 
     parser_rps = subparsers.add_parser('rps', help='open a rock-paper-scissors like game')
     parser_rps.add_argument('--source', required=True, help='the source address')
-    parser_rps.add_argument('--wager', required=True, help='the quantity of XCP to wager')
+    parser_rps.add_argument('--wager', required=True, help='the quantity of XCH to wager')
     parser_rps.add_argument('--move', type=int, required=True, help='the selected move')
     parser_rps.add_argument('--possible-moves', type=int, required=True, help='the number of possible moves (odd number greater or equal than 3)')
     parser_rps.add_argument('--expiration', type=int, required=True, help='the number of blocks for which the bet should be valid')
@@ -934,7 +934,7 @@ if __name__ == '__main__':
 
     elif args.action == 'rps':
         if args.fee: args.fee = util.devise(db, args.fee, 'BTC', 'input')
-        wager = util.devise(db, args.wager, 'XCP', 'input')
+        wager = util.devise(db, args.wager, 'XCH', 'input')
         random, move_random_hash = generate_move_random_hash(args.move)
         print('random: {}'.format(random))
         print('move_random_hash: {}'.format(move_random_hash))
@@ -996,7 +996,7 @@ if __name__ == '__main__':
         divisible = results['divisible']
         supply = util.devise(db, results['supply'], args.asset, dest='output')
         call_date = util.isodt(results['call_date']) if results['call_date'] else results['call_date']
-        call_price = str(results['call_price']) + ' XCP' if results['call_price'] else results['call_price']
+        call_price = str(results['call_price']) + ' XCH' if results['call_price'] else results['call_price']
 
         print('Asset Name:', args.asset)
         print('Asset ID:', asset_id)

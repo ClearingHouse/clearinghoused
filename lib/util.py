@@ -118,7 +118,7 @@ def log (db, command, category, bindings):
                     divisibility = 'indivisible'
                     unit = 1
                 if bindings['callable'] and (bindings['block_index'] > 50100 or config.TESTNET):   # Protocol change.
-                    callability = 'callable from {} for {} XCP/{}'.format(isodt(bindings['call_date']), bindings['call_price'], bindings['asset'])
+                    callability = 'callable from {} for {} XCH/{}'.format(isodt(bindings['call_date']), bindings['call_price'], bindings['asset'])
                 else:
                     callability = 'uncallable'
                 try:
@@ -176,11 +176,11 @@ def log (db, command, category, bindings):
             logging.info('Callback: {} called back {}% of {} ({}) [{}]'.format(bindings['source'], float(D(bindings['fraction']) * D(100)), bindings['asset'], bindings['tx_hash'], bindings['status']))
 
         elif category == 'rps':
-            log_message = 'RPS: {} opens game with {} possible moves and a wager of {}'.format(bindings['source'], bindings['possible_moves'], output(bindings['wager'], 'XCP'))
+            log_message = 'RPS: {} opens game with {} possible moves and a wager of {}'.format(bindings['source'], bindings['possible_moves'], output(bindings['wager'], 'XCH'))
             logging.info(log_message)
 
         elif category == 'rps_matches':
-            log_message = 'RPS Match: {} is playing a {}-moves game with {} with a wager of {} ({}) [{}]'.format(bindings['tx0_address'], bindings['possible_moves'], bindings['tx1_address'], output(bindings['wager'], 'XCP'), bindings['id'], bindings['status'])
+            log_message = 'RPS Match: {} is playing a {}-moves game with {} with a wager of {} ({}) [{}]'.format(bindings['tx0_address'], bindings['possible_moves'], bindings['tx1_address'], output(bindings['wager'], 'XCH'), bindings['id'], bindings['status'])
             logging.info(log_message)
 
         elif category == 'rpsresolves':
@@ -189,7 +189,7 @@ def log (db, command, category, bindings):
                 rps_matches = list(cursor.execute('''SELECT * FROM rps_matches WHERE id = ?''', (bindings['rps_match_id'],)))
                 assert len(rps_matches) == 1
                 rps_match = rps_matches[0]
-                log_message = 'RPS Resolved: {} is playing {} on a {}-moves game with {} with a wager of {} ({}) [{}]'.format(rps_match['tx0_address'], bindings['move'], rps_match['possible_moves'], rps_match['tx1_address'], output(rps_match['wager'], 'XCP'), rps_match['id'], rps_match['status'])
+                log_message = 'RPS Resolved: {} is playing {} on a {}-moves game with {} with a wager of {} ({}) [{}]'.format(rps_match['tx0_address'], bindings['move'], rps_match['possible_moves'], rps_match['tx1_address'], output(rps_match['wager'], 'XCH'), rps_match['id'], rps_match['status'])
             else:
                 log_message = 'RPS Resolved: {} [{}]'.format(bindings['tx_hash'], bindings['status'])
             logging.info(log_message)
