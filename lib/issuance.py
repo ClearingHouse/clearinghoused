@@ -88,7 +88,7 @@ def validate (db, source, destination, asset, quantity, divisible, callable_, ca
             problems.append('cannot transfer a non‐existent asset')
 
     # Check for existence of fee funds.
-    if quantity:
+    if quantity or (block_index >= 95000 or config.TESTNET):
         if not reissuance or (block_index < 51800 or config.TESTNET):  # Pay fee only upon first issuance. (Protocol change.)
             cursor = db.cursor()
             cursor.execute('''SELECT * FROM balances \
