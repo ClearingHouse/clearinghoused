@@ -585,7 +585,7 @@ def expire (db, block_index):
     order_matches = list(cursor)
     for order_match in order_matches:
         cancel_order_match(db, order_match, 'expired', block_index)
-    if block_index >= 315000 or config.TESTNET: # Protocol change.
+    if block_index >= 95000 or config.TESTNET: # Protocol change.
         # Re‐match.
         for order_match in order_matches:
             cursor.execute('''SELECT * FROM transactions\
