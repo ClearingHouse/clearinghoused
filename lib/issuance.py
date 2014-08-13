@@ -96,9 +96,9 @@ def validate (db, source, destination, asset, quantity, divisible, callable_, ca
             balances = cursor.fetchall()
             cursor.close()
             if block_index >= 95000 or config.TESTNET:     # Protocol change.
-                fee = int(100 * config.UNIT)
+                fee = 100 * config.UNIT
             elif block_index >= 50700 or config.TESTNET:     # Protocol change.
-                fee = int(1 * config.UNIT)
+                fee = 1 * config.UNIT
             elif block_index >= 50300 or config.TESTNET:   # Protocol change.
                 fee = 5 * config.UNIT
             elif block_index > 50000 or config.TESTNET:    # Protocol change.
