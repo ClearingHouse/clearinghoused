@@ -18,7 +18,7 @@ transaction encoding and state management.
 Connecting and Making Requests
 ---------------------------------
 
-By default, ``clearinghoused`` will listen on port ``4000`` (if on mainnet) or port ``14000`` (on testnet) for API
+By default, ``clearinghoused`` will listen on port ``7300`` (if on mainnet) or port ``17300`` (on testnet) for API
 requests. 
 
 Note that this API is built on JSON-RPC 2.0, not 1.1. JSON-RPC itself is pretty lightweight, and API requests
@@ -65,7 +65,7 @@ Python Example
     import requests
     from requests.auth import HTTPBasicAuth
     
-    url = "http://localhost:4000/api/"
+    url = "http://localhost:7300/api/"
     headers = {'content-type': 'application/json'}
     auth = HTTPBasicAuth('rpcuser', 'rpcpassword')
     
@@ -169,7 +169,7 @@ library. Here's a simple example that will get you the asset balances for a spec
 
 .. code-block:: php
 
-    $client = new jsonRPCClient('http://localhost:4000/jsonrpc/', array('username' => 'myusername', 'password' => 'mypass'));
+    $client = new jsonRPCClient('http://localhost:7300/jsonrpc/', array('username' => 'myusername', 'password' => 'mypass'));
     $addr = '15vA2MJ4ESG3Rt1PVQ79D1LFMBBNtcSz1f'; // VIA/XCH address you want to query
     $res = $client->get_balances(array('field' => 'address', 'op' => '==', 'value' => $addr));
 
@@ -180,7 +180,7 @@ Here's an example using ``curl`` to make an API call to the ``get_running_info``
 
 .. code-block::
 
-    curl http://127.0.0.2:4000/ --user rpcuser:rpcpassword -H 'Content-Type: application/json; charset=UTF-8' 
+    curl http://127.0.0.2:7300/ --user rpcuser:rpcpassword -H 'Content-Type: application/json; charset=UTF-8'
         -H 'Accept: application/json, text/javascript' --data-binary '{"jsonrpc":"2.0","id":0,"method":"get_running_info"}
 
 
