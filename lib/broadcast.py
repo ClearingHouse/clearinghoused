@@ -30,9 +30,10 @@ import logging
 from . import (util, exceptions, config, bitcoin)
 from . import (bet)
 
-FORMAT = '>IdI52p'
-LENGTH = 4 + 8 + 4 + 52
+FORMAT = '>IdI'
+LENGTH = 4 + 8 + 4
 ID = 30
+# NOTE: Pascal strings are used for storing texts for backwards‐compatibility.
 
 
 def validate (db, source, timestamp, value, fee_fraction_int, text):
@@ -66,11 +67,10 @@ def compose (db, source, timestamp, value, fee_fraction, text):
     problems = validate(db, source, timestamp, value, fee_fraction_int, text)
     if problems: raise exceptions.BroadcastError(problems)
 
+    curr_format = FORMAT + '{}p'.format(len(text) + 1)
     data = config.PREFIX + struct.pack(config.TXTYPE_FORMAT, ID)
-    data += struct.pack(FORMAT, timestamp, value, fee_fraction_int,
+    data += struct.pack(curr_format, timestamp, value, fee_fraction_int,
                         text.encode('utf-8'))
-    if len(data) > 80:
-        raise exceptions.BroadcastError('Text is greater than 52 bytes.')
     return (source, [], data)
 
 def parse (db, tx, message):
@@ -78,9 +78,15 @@ def parse (db, tx, message):
 
     # Unpack message.
     try:
-        assert len(message) == LENGTH
-        timestamp, value, fee_fraction_int, text = struct.unpack(FORMAT, message)
-        text = text.decode('utf-8')
+        curr_format = FORMAT + '{}p'.format(len(message) - LENGTH)
+        timestamp, value, fee_fraction_int, text = struct.unpack(curr_format, message)
+        if not (tx['block_index'] >= 125000 or config.TESTNET):  # Protocol change.
+            assert len(text) <= 52
+
+        try:
+            text = text.decode('utf-8')
+        except UnicodeDecodeError:
+            text = ''
         status = 'valid'
     except (AssertionError, struct.error) as e:
         timestamp, value, fee_fraction_int, text = 0, None, 0, None
