@@ -740,7 +740,7 @@ if __name__ == '__main__':
     urllib3_log.propagate = False
 
     # Database
-    logging.info('Status: Running v{} of counterpartyd.'.format(config.VERSION_STRING, config.XCP_CLIENT))
+    logging.info('Status: Running v{} of clearinghoused.'.format(config.VERSION_STRING, config.XCP_CLIENT))
     logging.info('Status: Connecting to database.')
     db = util.connect_to_db()
 
