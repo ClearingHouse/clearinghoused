@@ -26,7 +26,7 @@ def exact_penalty (db, address, block_index, order_match_id):
     for bad_order in bad_orders:
         cancel_order(db, bad_order, 'expired', block_index)
 
-    if not (block_index >= 314250 or config.TESTNET):   # Protocol change.
+    if not (block_index >= 125000 or config.TESTNET):   # Protocol change.
         # Order matches.
         bad_order_matches = list(cursor.execute('''SELECT * FROM order_matches \
                                                    WHERE ((tx0_address = ? AND forward_asset = ?) OR (tx1_address = ? AND backward_asset = ?)) AND (status = ?)''',
@@ -73,7 +73,7 @@ def cancel_order_match (db, order_match, status, block_index):
     cursor = db.cursor()
 
     # Skip order matches just expired as a penalty. (Not very efficient.)
-    if not (block_index >= 314250 or config.TESTNET):   # Protocol change.
+    if not (block_index >= 125000 or config.TESTNET):   # Protocol change.
         order_matches = list(cursor.execute('''SELECT * FROM order_matches \
                                                WHERE (id = ? AND status = ?)''',
                                             (order_match['id'], 'expired')))
