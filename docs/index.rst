@@ -2,7 +2,7 @@ clearinghoused
 ==================================================
 
 Clearinghouse is a protocol for the creation and use of decentralised financial instruments such as asset
-exchanges, contracts for difference and dividend payments. It uses Bitcoin as a transport layer.
+exchanges, contracts for difference and dividend payments. It uses Viacoin as a transport layer.
 The Clearinghouse protocol specification may be found `here <https://github.com/ClearingHouse/Clearinghouse>`__.
 
 ``clearinghoused`` is the reference client (and server daemon) implementation of the Clearinghouse protocol.
