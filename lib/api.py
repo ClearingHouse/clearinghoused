@@ -235,7 +235,7 @@ def do_transaction(db, name, params, private_key_wif=None, **kwargs):
     return broadcast_transaction(signed_tx)
 
 class APIStatusPoller(threading.Thread):
-    """Poll every few seconds for the length of time since the last version check, as well as the bitcoin status"""
+    """Poll every few seconds for the length of time since the last version check, as well as the viacoin status"""
     def __init__(self):
         self.last_version_check = 0
         self.last_database_check = 0

@@ -88,7 +88,7 @@ def bitcoind_check (db):
     block = rpc('getblock', [block_hash])
     time_behind = time.time() - block['time']   # How reliable is the block time?!
     if time_behind > 60 * 60 * 2:   # Two hours.
-        raise exceptions.BitcoindError('Bitcoind is running about {} seconds behind.'.format(round(time_behind)))
+        raise exceptions.BitcoindError('Viacoind is running about {} seconds behind.'.format(round(time_behind)))
 
 def connect (host, payload, headers):
     global bitcoin_rpc_session
@@ -102,7 +102,7 @@ def connect (host, payload, headers):
         except requests.exceptions.SSLError as e:
             raise e
         except requests.exceptions.ConnectionError:
-            logging.debug('Could not connect to Bitcoind. (Try {}/{})'.format(i+1, TRIES))
+            logging.debug('Could not connect to Viacoind. (Try {}/{})'.format(i+1, TRIES))
             time.sleep(5)
     return None
 
@@ -112,7 +112,7 @@ def wallet_unlock ():
         if getinfo['unlocked_until'] >= 60:
             return True # Wallet is unlocked for at least the next 60 seconds.
         else:
-            passphrase = getpass.getpass('Enter your Bitcoind[‐Qt] wallet passhrase: ')
+            passphrase = getpass.getpass('Enter your Viacoind[‐Qt] wallet passhrase: ')
             print('Unlocking wallet for 60 (more) seconds.')
             rpc('walletpassphrase', [passphrase, 60])
     else:
@@ -455,12 +455,12 @@ def transaction (tx_info, encoding='auto', fee_per_kb=config.DEFAULT_FEE_PER_KB,
             try:
                 base58_decode(address, config.ADDRESSVERSION)
             except Exception:   # TODO
-                raise exceptions.AddressError('Invalid Bitcoin address:', address)
+                raise exceptions.AddressError('Invalid Viacoin address:', address)
 
     # Check that the source is in wallet.
     if not config.UNITTEST and encoding in ('multisig') and not public_key:
         if not rpc('validateaddress', [source])['ismine']:
-            raise exceptions.AddressError('Not one of your Bitcoin addresses:', source)
+            raise exceptions.AddressError('Not one of your Viacoin addresses:', source)
 
     # Check that the destination output isn't a dust output.
     # Set null values to dust size.
@@ -576,7 +576,7 @@ def sign_tx (unsigned_tx_hex, private_key_wif=None):
         if result['complete']:
             signed_tx_hex = result['hex']
         else:
-            raise exceptions.TransactionError('Could not sign transaction with Bitcoin Core.')
+            raise exceptions.TransactionError('Could not sign transaction with Viacoin Core.')
 
     return signed_tx_hex
 
