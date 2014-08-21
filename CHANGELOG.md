@@ -1,8 +1,10 @@
 ## Client Versions ##
-* v9.40.0 (2014-08-19)
-	* allow dividends to be paid to XCP holders (protocol change: 125000)
+* v9.41.0 (2014-08-21)
+	* fixed bug in new text and descriptions
+* v9.40.0 (2014-08-20)
+	* allow dividends to be paid to XCH holders (protocol change: 125000)
 	* fixed bug in VIApay validation
-	* allow null expiration (protocol change: 125000)
+	* allow null expirations (protocol change: 125000)
 	* assert first block in database is BLOCK_FIRST
 	* arbitrarily long asset descriptions and broadcast texts (protocol change: 125000)
 	* don’t close order matches when penalizing (protocol change: 125000)
