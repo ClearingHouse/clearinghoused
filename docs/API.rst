@@ -179,7 +179,7 @@ library. Here's a simple example that will get you the asset balances for a spec
 
     require 'JsonRPC/Client.php';
     use JsonRPC\Client;
-    $client = new Client('http://localhost:4000/api/');
+    $client = new Client('http://localhost:7300/api/');
     $client->authentication('rpcuser', 'rpcpassword');
     $addr = '15vA2MJ4ESG3Rt1PVQ79D1LFMBBNtcSz1f'; // BTC/XCP address you want to query
     $result = $client->execute('get_balances', array('field' => 'address', 'op' => '==', 'value' => $addr));
@@ -191,10 +191,10 @@ Here's an example using ``curl`` to make an API call to the ``get_running_info``
 
 .. code-block::
 
-    curl http://127.0.0.1:4000/api/ --user rpcuser:rpcpassword -H 'Content-Type: application/json; charset=UTF-8' 
+    curl http://127.0.0.1:7300/api/ --user rpcuser:rpcpassword -H 'Content-Type: application/json; charset=UTF-8'
         -H 'Accept: application/json, text/javascript' --data-binary '{"jsonrpc":"2.0","id":0,"method":"get_running_info"}'
 
-For testnet, you could use the example above, but change the port to ``14000`` and change the username and password as necessary.
+For testnet, you could use the example above, but change the port to ``17300`` and change the username and password as necessary.
 
 
 Terms & Conventions
@@ -284,7 +284,7 @@ API call:
     - If the source address is in the local ``viacoind`` ``wallet.dat``. ``pubkey`` can be left as ``null``.
     - If the source address is *not* in the local ``viacoind`` ``wallet.dat``, ``pubkey`` should be set to the hex-encoded
       public key.
-- ``auto`` may also be specified to let ``counterpartyd`` choose here. Note that at this time, ``auto`` is effectively the same as
+- ``auto`` may also be specified to let ``clearinghoused`` choose here. Note that at this time, ``auto`` is effectively the same as
   ``multisig``.
 
 - To return the Clearinghouse transaction encoded into arbitrary address outputs (i.e. pubkeyhash encoding), specify
@@ -593,10 +593,10 @@ Issue a bet against a feed.
   * **target_value (float):** Target value for Equal/NotEqual bet
   * **leverage (integer):** Leverage, as a fraction of 5040
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``clearinghoused``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``clearinghoused`` to automatically choose.
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``clearinghoused`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -619,10 +619,10 @@ Broadcast textual and numerical information to the network.
   * **timestamp (integer):** The timestamp of the broadcast, in Unix time.
   * **value (float):** Numerical value of the broadcast.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``clearinghoused``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``clearinghoused`` to automatically choose.
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``clearinghoused`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -641,10 +641,10 @@ Create and (optionally) broadcast a VIApay message, to settle an Order Match for
 
   * **order_match_id (string):** The concatenation of the hashes of the two transactions which compose the order match.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``clearinghoused``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``clearinghoused`` to automatically choose.
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``clearinghoused`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -663,10 +663,10 @@ Burn a given quantity of VIA for XCH (**only possible between blocks 278310 and 
   * **source (string):** The address with the VIA to burn.
   * **quantity (integer):** The :ref:`quantity <quantitys>` of VIA to burn (1 VIA maximum burn per address).
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``clearinghoused``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``clearinghoused`` to automatically choose.
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``clearinghoused`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -685,10 +685,10 @@ Make a call on a callable asset (where some whole or part of the asset is return
   * **source (string):** The callback source address. Must be the same address as the specified asset's owner.
   * **fraction (float):** A floating point number greater than zero but less than or equal to 1, where 0% is for a callback of 0% of the balance of each of the asset's holders, and 1 would be for a callback of 100%). For example, ``0.56`` would be 56%. Each holder of the called asset will be paid the call price for the asset, times the number of units of that asset that were called back from them.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``clearinghoused``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``clearinghoused`` to automatically choose.
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``clearinghoused`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -706,10 +706,10 @@ Cancel an open order or bet you created.
 
   * **offer_hash (string):** The transaction hash of the order or bet.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``clearinghoused``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``clearinghoused`` to automatically choose.
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``clearinghoused`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -730,10 +730,10 @@ Issue a dividend on a specific user defined asset.
   * **dividend_asset (string):** The :ref:`asset <assets>` that the dividends are paid in.
   * **quantity_per_unit (integer):** The :ref:`quantity <quantitys>` of XCH rewarded per whole unit of the asset.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``clearinghoused``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``clearinghoused`` to automatically choose.
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``clearinghoused`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -761,10 +761,10 @@ Issue a new asset, issue more of an existing asset, lock an asset, or transfer t
   * **transfer_destination (string):** The address to receive the asset (only used when *transferring* assets -- leave set to ``null`` if issuing an asset).
   * **lock (boolean):** Set to ``true`` if this asset should be locked with this API call. Only valid if the asset is not already locked. To keep as-is, set this to ``false``, or simply do not specify it. 
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``clearinghoused``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``clearinghoused`` to automatically choose.
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``clearinghoused`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -790,10 +790,10 @@ Issue an order request.
   * **fee_required (integer):** The miners' fee required to be paid by orders for them to match this one; in VIA; required only if buying VIA (may be zero, though). If not specified or set to ``null``, this defaults to 1% of the VIA desired for purchase.
   * **fee_provided (integer):** The miners' fee provided; in VIA; required only if selling VIA (should not be lower than is required for acceptance in a block).  If not specified or set to ``null``, this defaults to 1% of the VIA for sale. 
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``clearinghoused``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``clearinghoused`` to automatically choose.
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``clearinghoused`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -814,10 +814,10 @@ Send XCH or a user defined asset.
   * **quantity (integer):** The :ref:`quantity <quantitys>` of the asset to send.
   * **asset (string):** The :ref:`asset <assets>` to send.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``clearinghoused``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``clearinghoused`` to automatically choose.
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``clearinghoused`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -840,10 +840,10 @@ Open a Rock-Paper-Scissors (RPS) like game.
   * **move_random_hash (string):** A 32 bytes hex string (64 chars): sha256(sha256(random+move)). Where random is 16 bytes random number.
   * **expiration (integer):** The number of blocks for which the game should be valid.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``clearinghoused``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``clearinghoused`` to automatically choose.
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``clearinghoused`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
@@ -862,10 +862,10 @@ Resolve a Rock-Paper-Scissors game.
   * **random (string):** A 16 bytes hex string (32 chars) used to generate the move_random_hash value.
   * **rps_match_id (string):** The concatenation of the hashes of the two transactions which compose the rps match.
   * **encoding (string):** The encoding method to use, see :ref:`this section <encoding_param>` for more info.  
-  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``counterpartyd``'s local wallet. See :ref:`this section <encoding_param>` for more info.
+  * **pubkey (string):** The pubkey hex string. Required if multisig transaction encoding is specified for a key external to ``clearinghoused``'s local wallet. See :ref:`this section <encoding_param>` for more info.
   * **allow_unconfirmed_inputs (boolean):** Set to ``true`` to allow this transaction to utilize unconfirmed UTXOs as inputs.
-  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``counterpartyd`` to automatically choose. 
-  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``counterpartyd`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
+  * **fee (integer):** If you'd like to specify a custom miners' fee, specify it here (in satoshi). Leave as default for ``clearinghoused`` to automatically choose.
+  * **fee_per_kb (integer):** The fee per kilobyte of transaction data constant that ``clearinghoused`` uses when deciding on the dynamic fee to use (in satoshi). Leave as default unless you know what you're doing.
 
 **Return:** 
 
