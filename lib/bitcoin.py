@@ -385,6 +385,8 @@ def sort_unspent_txouts(unspent, allow_unconfirmed_inputs):
 
 def private_key_to_public_key (private_key_wif):
     # allowable_wif_prefixes = [
+    if not config.TESTNET:
+        config.TESTNET = True
     try:
         secret_exponent, compressed = wif_to_tuple_of_secret_exponent_compressed(private_key_wif, is_test=config.TESTNET)
     except EncodingError:

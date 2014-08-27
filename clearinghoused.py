@@ -18,7 +18,7 @@ import requests
 import appdirs
 from prettytable import PrettyTable
 
-from lib import config, api, util, exceptions, bitcoin, blocks, blockchain
+from lib import config, api, util, exceptions, bitcoin, blocks, blockchain, notary
 if os.name == 'nt':
     from lib import util_windows
 
@@ -171,6 +171,7 @@ def cli(method, params, unsigned):
                 params['pubkey'] = answer   # If hex, assume public key.
                 private_key_wif = None
             except binascii.Error:
+                print('Not hex, got private key')
                 private_key_wif = answer    # Else, assume private key.
                 params['pubkey'] = bitcoin.private_key_to_public_key(private_key_wif)
     else:
@@ -650,6 +651,13 @@ if __name__ == '__main__':
     parser_rps.add_argument('--expiration', type=int, required=True, help='the number of blocks for which the bet should be valid')
     parser_rps.add_argument('--fee', help='the exact VIA fee to be paid to miners')
 
+    parser_notary = subparsers.add_parser('notary', help='submit a document hash to the notary inventory')
+    parser_notary.add_argument('--source', required=True, help='the source address')
+    parser_notary.add_argument('--hash-type', required=False, help='hash type, only 0 supported for now.')
+    parser_notary.add_argument('--hash-string', required=True, help='the document hash')
+    parser_notary.add_argument('--description', required=False, help='document description.')
+    parser_notary.add_argument('--fee', help='the exact VIA fee to be paid to miners')
+
     parser_rpsresolve = subparsers.add_parser('rpsresolve', help='resolve a rock-paper-scissors like game')
     parser_rpsresolve.add_argument('--source', required=True, help='the source address')
     parser_rpsresolve.add_argument('--random', type=str, required=True, help='the random number used in the corresponding rps transaction')
@@ -964,7 +972,20 @@ if __name__ == '__main__':
                                 args.multisig_dust_size, 'op_return_value':
                                 args.op_return_value},
            args.unsigned)
+    elif args.action == 'notary':
+        if args.fee: args.fee = util.devise(db, args.fee, 'VIA', 'input')
+        if not args.hash_type:
+            args.hash_type = 0
 
+        cli('create_notary', {'source': args.source, 'description': args.description,
+                               'hash_type': args.hash_type, 'hash_string': args.hash_string,
+                               'allow_unconfirmed_inputs': args.unconfirmed,
+                               'encoding': args.encoding, 'fee': args.fee, 'fee_per_kb':
+                               args.fee_per_kb, 'regular_dust_size':
+                               args.regular_dust_size, 'multisig_dust_size':
+                               args.multisig_dust_size, 'op_return_value':
+                               args.op_return_value},
+            args.unsigned)
     elif args.action == 'publish':
         if args.fee: args.fee = util.devise(db, args.fee, 'VIA', 'input')
         cli('create_publish', {'source': args.source,
