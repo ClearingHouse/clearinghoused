@@ -1,4 +1,5 @@
 import decimal
+import time
 from lib import config, exceptions
 # Full name to resolve circular dependency
 import lib.bitcoin
@@ -78,7 +79,7 @@ def listunspent(address):
             rv.append({'address': address,
                        'txid': txid,
                        'vout': vout['n'],
-                       'ts': txs[txid]['time'],
+                       'ts': txs[txid]['time'] if 'time' in txs[txid] else int(time.time()),
                        'scriptPubKey': vout['scriptPubKey']['hex'],
                        'amount': vout['value'],
                        'confirmations': txs[txid]['confirmations']})
