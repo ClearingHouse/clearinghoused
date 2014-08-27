@@ -5,7 +5,7 @@ import sys
 import logging
 
 from lib import config
-from lib.blockchain import blockr, insight, sochain
+from lib.blockchain import blockr, insight, sochain, addrindex
 
 # http://test.insight.is/api/sync
 def check():
