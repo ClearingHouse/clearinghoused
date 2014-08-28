@@ -1,4 +1,6 @@
 ## Client Versions ##
+* v9.41.1 (2014-08-28)
+	* Increase order-match period (protocol change 150000)
 * v9.41.0 (2014-08-21)
 	* fixed bug in new text and descriptions
 * v9.40.0 (2014-08-20)

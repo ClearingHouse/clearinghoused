@@ -1,7 +1,7 @@
 {
 	"minimum_version_major": 9,
 	"minimum_version_minor": 41,
-	"minimum_version_revision": 0,
+	"minimum_version_revision": 1,
 	"reason": "misc.",
-	"block_index": 125000
+	"block_index": 150000
 }

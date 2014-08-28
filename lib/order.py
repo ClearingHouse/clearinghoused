@@ -535,7 +535,9 @@ def match (db, tx, block_index=None):
             util.message(db, block_index, 'update', 'orders', bindings)
 
             # Calculate when the match will expire.
-            if block_index >= 51500 or config.TESTNET:      # Protocol change.
+            if block_index >= 150000 or config.TESTNET:      # Protocol change.
+                match_expire_index = block_index + 200
+            elif block_index >= 51500 or config.TESTNET:      # Protocol change.
                 match_expire_index = block_index + 20
             elif block_index >= 50400 or config.TESTNET:    # Protocol change.
                 match_expire_index = block_index + 10
