@@ -55,8 +55,6 @@ def has_my_vin(tx, vout_txs, address):
     return False
 
 def locate_vout(vouts, n):
-    if vouts[n]['n'] == n:
-        return vouts[n]
     for vout in vouts:
         if vout['n'] == n:
             return vout
