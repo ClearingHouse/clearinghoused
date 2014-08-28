@@ -154,7 +154,7 @@ def getaddressinfo(address):
             'unconfirmedBalanceSat': int(unconfirmedBalance * 100000000),
             'unconfirmedTxApperances': unconfirmedTxApperances,
             'txApperances': txApperances,
-            'transactions': list(txs.keys())}
+            'transactions': sorted(txs.keys(), key=lambda k: txs[k]['confirmations'])}
 
 # Unlike blockexplorers, does not provide 'spent' information on spent vouts.
 # This information is not used in clearblockd/clearinghoused anyway.
