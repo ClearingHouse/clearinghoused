@@ -16,7 +16,7 @@ from Crypto.Cipher import ARC4
 import apsw
 
 from . import (config, exceptions, util, bitcoin)
-from . import (send, order, btcpay, issuance, broadcast, bet, dividend, burn, cancel, callback, rps, rpsresolve, notary)
+from . import (send, order, btcpay, issuance, broadcast, bet, dividend, burn, cancel, callback, rps, rpsresolve, notary, notary_transfer)
 
 # Order matters for FOREIGN KEY constraints.
 TABLES = ['credits', 'debits', 'messages'] + \
@@ -24,7 +24,7 @@ TABLES = ['credits', 'debits', 'messages'] + \
           'order_matches', 'order_expirations', 'orders', 'bet_match_expirations',
           'bet_matches', 'bet_expirations', 'bets', 'broadcasts', 'btcpays',
           'burns', 'callbacks', 'cancels', 'dividends', 'issuances', 'sends',
-          'rps_match_expirations', 'rps_expirations', 'rpsresolves', 'rps_matches', 'rps', 'documents']
+          'rps_match_expirations', 'rps_expirations', 'rpsresolves', 'rps_matches', 'rps', 'documents', 'document_transactions']
 
 def check_conservation (db):
     logging.debug('Status: Checking for conservation of assets.')
@@ -82,6 +82,8 @@ def parse_tx (db, tx):
         rpsresolve.parse(db, tx, message)
     elif message_type_id == notary.ID:
         notary.parse(db, tx, message)
+    elif message_type_id == notary_transfer.ID:
+        notary_transfer.parse(db, tx, message)
     else:
         cursor.execute('''UPDATE transactions \
                                    SET supported=? \
@@ -815,16 +817,23 @@ def initialise(db):
 
     # Notarial state index
     cursor.execute('''CREATE TABLE IF NOT EXISTS documents(
-                      document_id INTEGER PRIMARY KEY,
                       owner TEXT,
-                      tx_hash TEXT,
-                      tx_index INTEGER,
-                      hash TEXT,
+                      hash_string TEXT,
                       hash_type INTEGER,
-                      block_index INTEGER
+                      description TEXT
                       )
                   ''')
 
+    cursor.execute('''CREATE TABLE IF NOT EXISTS document_transactions(
+                      tx_index INTEGER,
+                      tx_hash TEXT,
+                      block_index INTEGER,
+                      source TEXT,
+                      destination TEXT,
+                      hash_type INTEGER,
+                      hash_string TEXT
+                      )
+                  ''')
 
     # Mempool messages
     # NOTE: `status`, 'block_index` are removed from bindings.

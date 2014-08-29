@@ -84,6 +84,8 @@ def log (db, command, category, bindings):
             logging.debug('Database: set status of order_match {} to {}.'.format(bindings['order_match_id'], bindings['status']))
         elif category == 'bet_matches':
             logging.debug('Database: set status of bet_match {} to {}.'.format(bindings['bet_match_id'], bindings['status']))
+        elif category == 'documents':
+            logging.info('Ownership of document with hash {} transferred to {}.'.format(bindings['hash_string'], bindings['owner']))
         # TODO: elif category == 'balances':
             # logging.debug('Database: set balance of {} in {} to {}.'.format(bindings['address'], bindings['asset'], output(bindings['quantity'], bindings['asset']).split(' ')[0]))
 
@@ -228,7 +230,7 @@ def log (db, command, category, bindings):
             logging.info('Expired RPS Match: {}'.format(bindings['rps_match_id']))
 
         elif category == 'documents':
-            logging.info('Notary document with hash {} submitted by address {} with description {}.'.format(bindings['hash_string'], bindings['source'], bindings['description']))
+            logging.info('Notary document with hash {} submitted by address {} with description {}.'.format(bindings['hash_string'], bindings['owner'], bindings['description']))
 
     cursor.close()
 

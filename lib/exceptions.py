@@ -79,5 +79,7 @@ class RpsError (MessageError):
     pass
 class NotaryIssuanceError (MessageError):
     pass
+class NotaryTransferError (MessageError):
+    pass
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

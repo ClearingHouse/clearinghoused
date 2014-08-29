@@ -30,12 +30,12 @@ def validate (db, source, hash_type, hash_string, description, block_index):
     # TODO: Add check for description length
 
     cursor = db.cursor()
-    cursor.execute('''SELECT * FROM documents WHERE (hash = ? AND hash_type = ?)''', (hash_string, hash_type))
-    documents = cursor.fetchall()
-    cursor.close()
+
+    documents = list(cursor.execute('''SELECT * FROM documents WHERE (hash_string = ? AND hash_type = ?)''', (hash_string, hash_type)))
     if documents:
         problems.append("Document is already submitted.")
 
+    cursor.close()
     return hash_type, hash_string, description, block_index, problems
 
 def parse (db, tx, message):
@@ -70,19 +70,36 @@ def parse (db, tx, message):
     if not hash_string:
         status = 'invalid'
 
+    hash_type, hash_string, description, block_index, problems = validate(db, tx['source'], hash_type, hash_string, description, tx['block_index'])
+    if problems:
+        status = 'invalid'
+
     if status == 'valid':
-        hash_type, hash_string, description, block_index, problems = validate(db, tx['source'], hash_type, hash_string, description, tx['block_index'])
         # Add parsed transaction to message-type–specific table.
+
+        # Update document state for quick lookups
+        bindings = {
+            'owner': tx['source'],
+            'hash_string': hash_string,
+            'hash_type': hash_type,
+            'block_index': tx['block_index'],
+            'description': description
+        }
+        sql='INSERT INTO documents VALUES(:owner, :hash_string, :hash_type, :description)'
+        notary_parse_cursor.execute(sql, bindings)
+
+        # Update transaction log
         bindings = {
             'tx_index': tx['tx_index'],
             'tx_hash': tx['tx_hash'],
             'block_index': tx['block_index'],
             'source': tx['source'],
+            'destination': tx['source'],
             'hash_type': hash_type,
-            'hash_string': hash_string,
-            'description': description,
+            'hash_string': hash_string
         }
-        sql='INSERT INTO documents VALUES(:tx_index, :tx_hash, :block_index, :source, :hash_type, :hash_string, :description)'
+
+        sql='INSERT INTO document_transactions VALUES(:tx_index, :tx_hash, :block_index, :source, :destination, :hash_type, :hash_string)'
         notary_parse_cursor.execute(sql, bindings)
 
     notary_parse_cursor.close()
