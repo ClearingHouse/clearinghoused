@@ -1,4 +1,7 @@
 ## Client Versions ##
+* v9.42.0 (2014-09-04)
+	* disable dividends to XCP holders (protocol change: 193000)
+	* allow dividends only from issuers (protocol change: 193000)
 * v9.41.1 (2014-08-28)
 	* Increase order-match period (protocol change 150000)
 * v9.41.0 (2014-08-21)
