@@ -71,14 +71,18 @@ def parse (db, tx, message):
         }
         sql='insert into document_transactions VALUES(:tx_index, :tx_hash, :block_index, :source, :destination, :hash_type, :hash_string)'
         notarytx_cursor.execute(sql, bindings)
+        notarytx_cursor.close()
 
+        # I know we are not using the block_index here but if we remove it things, well break down. So keep it in here.
+        notarytx_cursor = db.cursor()
         bindings = {
             'owner': destination,
+            'tx_hash': tx['tx_hash'],
             'hash_type': hash_type,
             'hash_string': hash_string,
             'block_index': tx['block_index']
         }
-        sql='update documents SET owner = :owner WHERE hash_type = :hash_type AND hash_string = :hash_string'
+        sql='update documents SET owner = :owner, tx_hash = :tx_hash WHERE hash_type = :hash_type AND hash_string = :hash_string'
 
         notarytx_cursor.execute(sql, bindings)
         notarytx_cursor.close()

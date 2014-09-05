@@ -816,11 +816,14 @@ def initialise(db):
                    ''')
 
     # Notarial state index
+    # Notice the tx_hash there, I don't want to do this, it doens't belogn in the state.
+    # But if we omit it then the notifications break down. So.
     cursor.execute('''CREATE TABLE IF NOT EXISTS documents(
                       owner TEXT,
                       hash_string TEXT,
                       hash_type INTEGER,
-                      description TEXT
+                      description TEXT,
+                      tx_hash TEXT
                       )
                   ''')
 

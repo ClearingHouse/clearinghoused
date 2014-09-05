@@ -77,17 +77,6 @@ def parse (db, tx, message):
     if status == 'valid':
         # Add parsed transaction to message-type–specific table.
 
-        # Update document state for quick lookups
-        bindings = {
-            'owner': tx['source'],
-            'hash_string': hash_string,
-            'hash_type': hash_type,
-            'block_index': tx['block_index'],
-            'description': description
-        }
-        sql='INSERT INTO documents VALUES(:owner, :hash_string, :hash_type, :description)'
-        notary_parse_cursor.execute(sql, bindings)
-
         # Update transaction log
         bindings = {
             'tx_index': tx['tx_index'],
@@ -100,6 +89,18 @@ def parse (db, tx, message):
         }
 
         sql='INSERT INTO document_transactions VALUES(:tx_index, :tx_hash, :block_index, :source, :destination, :hash_type, :hash_string)'
+        notary_parse_cursor.execute(sql, bindings)
+
+        # Update document state for quick lookups
+        bindings = {
+            'owner': tx['source'],
+            'hash_string': hash_string,
+            'hash_type': hash_type,
+            'block_index': tx['block_index'],
+            'description': description,
+            'tx_hash': tx['tx_hash']
+        }
+        sql='INSERT INTO documents VALUES(:owner, :hash_string, :hash_type, :description, :tx_hash)'
         notary_parse_cursor.execute(sql, bindings)
 
     notary_parse_cursor.close()

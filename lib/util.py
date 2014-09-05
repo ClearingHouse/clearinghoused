@@ -229,6 +229,9 @@ def log (db, command, category, bindings):
         elif category == 'rps_match_expirations':
             logging.info('Expired RPS Match: {}'.format(bindings['rps_match_id']))
 
+        elif category == 'document_transactions':
+            logging.info('Notary transaction for document {} from {} to {} .'.format(bindings['hash_string'], bindings['source'], bindings['receiver']))
+
         elif category == 'documents':
             logging.info('Notary document with hash {} submitted by address {} with description {}.'.format(bindings['hash_string'], bindings['owner'], bindings['description']))
 
