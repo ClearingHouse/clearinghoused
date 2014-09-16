@@ -32,6 +32,8 @@ def api (method, params):
         "jsonrpc": "2.0",
         "id": 0,
     }
+    print(payload)
+    print(config.RPC)
     response = requests.post(config.RPC, data=json.dumps(payload), headers=headers)
     if response == None:
         raise exceptions.RPCError('Cannot communicate with {} server.'.format(config.XCP_CLIENT))
@@ -82,6 +84,8 @@ def log (db, command, category, bindings):
             logging.debug('Database: set status of order_match {} to {}.'.format(bindings['order_match_id'], bindings['status']))
         elif category == 'bet_matches':
             logging.debug('Database: set status of bet_match {} to {}.'.format(bindings['bet_match_id'], bindings['status']))
+        elif category == 'documents':
+            logging.info('Ownership of document with hash {} transferred to {}.'.format(bindings['hash_string'], bindings['owner']))
         # TODO: elif category == 'balances':
             # logging.debug('Database: set balance of {} in {} to {}.'.format(bindings['address'], bindings['asset'], output(bindings['quantity'], bindings['asset']).split(' ')[0]))
 
@@ -184,7 +188,6 @@ def log (db, command, category, bindings):
             logging.info(log_message)
 
         elif category == 'rpsresolves':
-            
             if bindings['status'] == 'valid':
                 rps_matches = list(cursor.execute('''SELECT * FROM rps_matches WHERE id = ?''', (bindings['rps_match_id'],)))
                 assert len(rps_matches) == 1
@@ -225,6 +228,9 @@ def log (db, command, category, bindings):
 
         elif category == 'rps_match_expirations':
             logging.info('Expired RPS Match: {}'.format(bindings['rps_match_id']))
+
+        elif category == 'documents':
+            logging.info('Notary document with hash {} submitted by address {} with description {}.'.format(bindings['hash_string'], bindings['owner'], bindings['description']))
 
     cursor.close()
 

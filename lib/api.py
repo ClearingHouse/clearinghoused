@@ -23,7 +23,7 @@ import jsonrpc
 from jsonrpc import dispatcher
 
 from . import (config, bitcoin, exceptions, util)
-from . import (send, order, btcpay, issuance, broadcast, bet, dividend, burn, cancel, callback, rps, rpsresolve, publish)
+from . import (send, order, btcpay, issuance, broadcast, bet, dividend, burn, cancel, callback, rps, rpsresolve, publish, notary, notary_transfer)
 
 
 API_TABLES = ['balances', 'credits', 'debits', 'bets', 'bet_matches',
@@ -32,11 +32,11 @@ API_TABLES = ['balances', 'credits', 'debits', 'bets', 'bet_matches',
               'bet_expirations', 'order_expirations', 'bet_match_expirations',
               'order_match_expirations', 'bet_match_resolutions', 'rps',
               'rpsresolves', 'rps_matches', 'rps_expirations', 'rps_match_expirations',
-              'mempool']
+              'mempool', 'notary', 'notary_transfer']
 
 API_TRANSACTIONS = ['bet', 'broadcast', 'btcpay', 'burn', 'cancel',
                     'callback', 'dividend', 'issuance', 'order', 'send',
-                    'rps', 'rpsresolve', 'publish']
+                    'rps', 'rpsresolve', 'publish', 'notary', 'notary_transfer']
 
 COMMONS_ARGS = ['encoding', 'fee_per_kb', 'regular_dust_size',
                 'multisig_dust_size', 'op_return_value', 'pubkey',
@@ -310,7 +310,6 @@ class APIServer(threading.Thread):
 
         # Generate dynamically create_{transaction} and do_{transaction} methods
         def generate_create_method(transaction):
-
             def split_params(**kwargs):
                 transaction_args = {}
                 common_args = {}
