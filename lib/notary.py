@@ -70,11 +70,10 @@ def parse (db, tx, message):
     if not hash_string:
         status = 'invalid'
 
-    hash_type, hash_string, description, block_index, problems = None, None, None, None, 'invalid'
     if status != 'invalid':
         hash_type, hash_string, description, block_index, problems = validate(db, tx['source'], hash_type, hash_string, description, tx['block_index'])
-    if problems:
-        status = 'invalid'
+        if problems:
+            status = 'invalid'
 
     if status == 'valid':
         # Add parsed transaction to message-type–specific table.
