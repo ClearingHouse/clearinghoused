@@ -42,9 +42,8 @@ def parse (db, tx, message):
     notary_parse_cursor = db.cursor()
     status = 'valid'
 
-    # Only testnet for now
     try:
-        if config.TESTNET:
+        if tx['block_index'] >= 275000 or config.TESTNET:  # protocol change
             length = len(message) - LENGTH_SHA2
             if length == 0:
                 notary_format = FORMAT
