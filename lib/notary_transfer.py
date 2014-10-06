@@ -42,9 +42,8 @@ def validate (db, source, hash_type, hash_string, block_index, destination):
 def parse (db, tx, message):
     status = 'valid'
 
-    # Only testnet for now
     try:
-        if config.TESTNET:
+        if tx['block_index'] >= 275000 or config.TESTNET:
             hash_type, hash_bytes = struct.unpack(FORMAT, message)
             hash_string = binascii.hexlify(hash_bytes).decode('utf-8')
         else:
