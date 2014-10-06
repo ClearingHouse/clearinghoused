@@ -52,10 +52,11 @@ def parse (db, tx, message):
         hash_type, hash_string = None, None
         status = 'invalid'
 
-    hash_type, hash_string, block_index, destination, problems = validate(db, tx['source'], hash_type, hash_string, tx['block_index'], tx['destination'])
+    if status != 'invalid':
+        hash_type, hash_string, block_index, destination, problems = validate(db, tx['source'], hash_type, hash_string, tx['block_index'], tx['destination'])
 
-    if problems:
-        status = 'invalid'
+        if problems:
+            status = 'invalid'
 
     if status == 'valid':
         notarytx_cursor = db.cursor()
