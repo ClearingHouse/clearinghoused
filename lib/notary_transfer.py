@@ -30,6 +30,9 @@ def validate (db, source, hash_type, hash_string, block_index, destination):
     if not destination:
         problems.append("No destination given")
 
+    if source == destination:
+        problems.append("You can't transfer ownership to the current owner.")
+
     cursor = db.cursor()
     documents = list(cursor.execute('''SELECT * FROM documents WHERE (hash_string = ? AND hash_type = ?) AND owner = ?''', (hash_string, hash_type, source)))
     cursor.close()
