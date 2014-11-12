@@ -90,7 +90,7 @@ def validate (db, source, destination, asset, quantity, divisible, callable_, ca
 
     # Check for existence of fee funds.
     if quantity or (block_index >= 95000 or config.TESTNET):   # Protocol change.
-        if not reissuance or (block_index < 51800 or config.TESTNET):  # Pay fee only upon first issuance. (Protocol change.)
+        if not reissuance or (block_index < 51800 and not config.TESTNET):  # Pay fee only upon first issuance. (Protocol change.)
             cursor = db.cursor()
             cursor.execute('''SELECT * FROM balances \
                               WHERE (address = ? AND asset = ?)''', (source, config.XCP))
@@ -128,7 +128,7 @@ def compose (db, source, transfer_destination, asset, quantity, divisible, calla
     if problems: raise exceptions.IssuanceError(problems)
 
     asset_id = util.asset_id(asset)
-    data = config.PREFIX + struct.pack(config.TXTYPE_FORMAT, ID)
+    data = struct.pack(config.TXTYPE_FORMAT, ID)
     if len(description) <= 42:
         curr_format = FORMAT_2 + '{}p'.format(len(description) + 1)
     else:
@@ -159,15 +159,17 @@ def parse (db, tx, message):
             except UnicodeDecodeError:
                 description = ''
         else:
+            if len(message) != LENGTH_1:
+                raise exceptions.UnpackError
             asset_id, quantity, divisible = struct.unpack(FORMAT_1, message)
             callable_, call_date, call_price, description = False, 0, 0.0, ''
         try:
             asset = util.asset_name(asset_id)
-        except:
+        except exceptions.AssetNameError:
             asset = None
             status = 'invalid: bad asset name'
         status = 'valid'
-    except (AssertionError, struct.error) as e:
+    except exceptions.UnpackError as e:
         asset, quantity, divisible, callable_, call_date, call_price, description = None, None, None, None, None, None, None
         status = 'invalid: could not unpack'
 
@@ -188,7 +190,7 @@ def parse (db, tx, message):
 
     # Debit fee.
     if status == 'valid':
-        util.debit(db, tx['block_index'], tx['source'], config.XCP, fee)
+        util.debit(db, tx['block_index'], tx['source'], config.XCP, fee, action="issuance fee", event=tx['tx_hash'])
 
     # Lock?
     lock = False
@@ -227,7 +229,7 @@ def parse (db, tx, message):
 
     # Credit.
     if status == 'valid' and quantity:
-        util.credit(db, tx['block_index'], tx['source'], asset, quantity)
+        util.credit(db, tx['block_index'], tx['source'], asset, quantity, action="issuance", event=tx['tx_hash'])
 
     issuance_parse_cursor.close()
 

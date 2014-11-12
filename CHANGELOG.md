@@ -1,4 +1,14 @@
 ## Client Versions ##
+* v9.45.0 (2014-10-23)
+	* add dividend fee of 0.0002 XCH per recipient (protocol change: 420000)
+* v9.44.0 (2014-09-22)
+	* server action requires `server` positional argument
+	* lockfile
+	* made `--force` server‐side only, moved after `server` argument
+	* multiple sources, destinations (testnet protocol change: 303000)
+	* multi‐signature support (testnet protocol change: 303000)
+* v9.43.1 (2014-09-14)
+	* generate movements hash for each block (start at block: 401000)
 * v9.43.0 (2014-10-05)
 	* enable blockchain notary (protocol change: 275000)
 * v9.42.0 (2014-09-04)

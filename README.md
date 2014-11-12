@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/CounterpartyXCP/counterpartyd.svg?branch=develop)](https://travis-ci.org/CounterpartyXCP/counterpartyd)
+
 # Description
 ClearingHouse is a protocol for the creation and use of decentralised financial
 instruments such as asset exchanges, contracts for difference and dividend
@@ -10,8 +12,8 @@ The ClearingHouse protocol specification may be found at
 
 # Dependencies
 * [Python 3](http://python.org)
-* Python 3 packages: apsw, requests, appdirs, prettytable, python-dateutil, json-rpc, tornado, flask, Flask-HTTPAuth, pycoin, pyzmq(v2.2+), pycrypto (see [this link](https://github.com/CounterpartyXCH/clearinghoused/blob/master/pip-requirements.txt) for exact working versions)
-* Viacoind
+* Python 3 packages: apsw, requests, appdirs, prettytable, python-dateutil, json-rpc, tornado, flask, Flask-HTTPAuth, pycoin, pyzmq(v2.2+), pycrypto, lockfile, python-bitcoinlib (see [this link](https://github.com/CounterpartyXCP/counterpartyd/blob/master/pip-requirements.txt) for exact working versions)
+* Bitcoind
 
 # Installation
 
@@ -57,8 +59,9 @@ however.
 
 Sometimes the underlying package requirements may change for `clearinghoused`. If you build and installed it from scratch,
 you can manually update these requirements by executing something like:
-
-    ```pip install --upgrade -r pip-requirements.txt```
+```
+    pip install --upgrade -r pip-requirements.txt 
+```
 
 # Test suite
 
@@ -81,7 +84,7 @@ For a summary of the command‐line arguments and options, see
 # Versioning
 * Major version changes require a full rebuild of the database.
 * Minor version changes require a database reparse.
-* All protocol changes are retroactive on testnet.
+* Most protocol changes are retroactive on testnet.
 
 ## Input and Output
 * Quantities of divisible assets are written to eight decimal places.
