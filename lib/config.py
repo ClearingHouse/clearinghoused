@@ -106,3 +106,8 @@ CHECKPOINTS_TESTNET = {
 }
 
 FIRST_MULTISIG_BLOCK_TESTNET = 370000
+
+# Make DB snapshots every 100 blocks, try to use them to restore recent state on reorg to save reparse time.
+# Experimental, relevant for chains with high orphaning rate.
+# Set to True for clearinghoused, to False for upstream.
+SHALLOW_REORG = True

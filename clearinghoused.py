@@ -704,6 +704,8 @@ if __name__ == '__main__':
     parser_market.add_argument('--give-asset', help='only show orders offering to sell GIVE_ASSET')
     parser_market.add_argument('--get-asset', help='only show orders offering to buy GET_ASSET')
 
+    parser_softreorg = subparsers.add_parser('shallowreorg', help='use regular DB backups for faster reorg')
+
     args = parser.parse_args()
 
     # Convert.
@@ -732,6 +734,8 @@ if __name__ == '__main__':
                 database_file=args.database_file, testnet=args.testnet,
                 testcoin=args.testcoin, carefulness=args.carefulness,
                 force=args.force)
+
+    config.SHALLOW_REORG = config.SHALLOW_REORG or args.shallowreorg
 
     # Logging (to file and console).
     logger = logging.getLogger() #get root logger
