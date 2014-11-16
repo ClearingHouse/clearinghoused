@@ -1,41 +1,51 @@
 [![Build Status](https://travis-ci.org/CounterpartyXCP/counterpartyd.svg?branch=develop)](https://travis-ci.org/CounterpartyXCP/counterpartyd)
+[![Coverage Status](https://coveralls.io/repos/CounterpartyXCP/counterpartyd/badge.png?branch=develop)](https://coveralls.io/r/CounterpartyXCP/counterpartyd?branch=develop)
 
 # Description
-ClearingHouse is a protocol for the creation and use of decentralised financial
-instruments such as asset exchanges, contracts for difference and dividend
-payments. It uses Viacoin as a transport layer. The contents of this
-repository, `clearinghoused`, constitute the reference implementation of the
-protocol.
+`clearinghoused` is the reference implementation of the [ClearingHouse
+Protocol](https://github.com/ClearingHouse/ClearingHouse).
 
-The ClearingHouse protocol specification may be found at
-<https://github.com/ClearingHouse/ClearingHouse>.
 
 # Dependencies
 * [Python 3](http://python.org)
-* Python 3 packages: apsw, requests, appdirs, prettytable, python-dateutil, json-rpc, tornado, flask, Flask-HTTPAuth, pycoin, pyzmq(v2.2+), pycrypto, lockfile, python-bitcoinlib (see [this link](https://github.com/CounterpartyXCP/counterpartyd/blob/master/pip-requirements.txt) for exact working versions)
-* Bitcoind
+* [Python 3 packages](https://github.com/ClearingHouse/clearinghoused/blob/master/pip-requirements.txt)
+* Viacoin Core
+
+Sometimes the underlying package requirements may change for `clearinghoused`.
+If you build and installed it from scratch, you can manually update these
+requirements by executing something like:
+```
+    pip3 install --upgrade -r pip-requirements.txt 
+```
+
+# Versioning
+* Major version changes require a full (automatic) rebuild of the database.
+* Minor version changes require a(n automatic) database reparse.
+* Most protocol changes are retroactive on testnet.
+
 
 # Installation
 
 **NOTE: This section covers manual installation of clearinghoused. If you want more of
-an automated approach to clearinghoused installation for Windows and Linux, see [this link](http://clearinghoused-build.readthedocs.org/en/latest/).**
+an automated approach to clearinghoused installation for Windows and Linux, use
+the [build system](http://clearinghouse.io/docs/build-system/).**
 
 In order for clearinghoused to function, it must be able to communicate with a
-running instance of Viacoind or Viacoin-Qt, which handles many Viacoin‐specific
-matters on its behalf, including all wallet and private key management. For
-such interoperability, Viacoind must be run with the following options:
-`-txindex=1` `-server=1`. This may require the setting of a JSON‐RPC password,
-which may be saved in Viacoind’s configuration file.
+running instance of Viacoin Core, which handles many Viacoin‐specific matters
+on its behalf, including all wallet and private key management. For such
+interoperability, Viacoin Core must be run with the following options: `-txindex=1`
+`-server=1`. This may require the setting of a JSON‐RPC password, which may be
+saved in Viacoin Core’s configuration file.
 
-clearinghoused needs to know at least the JSON‐RPC password of the Viacoind with
-which it is supposed to communicate. The simplest way to set this is to
-include it in all command‐line invocations of clearinghoused, such as
-`./clearinghoused.py --rpc-password=PASSWORD ACTION`. To make this and other
-options persistent across clearinghoused sessions, one may store the desired
+clearinghoused needs to know at least the JSON‐RPC password of the Viacoin Core
+with which it is supposed to communicate. The simplest way to set this is to
+include it in all command‐line invocations of counterpartyd, such as
+`./counterpartyd.py --rpc-password=PASSWORD ACTION`. To make this and other
+options persistent across counterpartyd sessions, one may store the desired
 settings in a configuration file specific to clearinghoused.
 
-Note that the syntaxes for the countpartyd and the Viacoind configuraion
-files are not the same. A Viacoind configuration file looks like this:
+Note that the syntaxes for the clearinghoused and the Viacoin Core configuraion
+files are not the same. A Viacoin Core configuration file looks like this:
 
 	rpcuser=viacoinrpc
 	rpcpassword=PASSWORD
@@ -46,28 +56,15 @@ files are not the same. A Viacoind configuration file looks like this:
 However, a clearinghoused configuration file looks like this:
 
 	[Default]
-	Viacoind-rpc-password=PASSWORD
+	backend-rpc-password=PASSWORD
 
 Note the change in hyphenation between `rpcpassword` and `rpc-password`.
 
 If and only if clearinghoused is to be run on the Viacoin testnet, with the
-`--testnet` CLI option, Viacoind must be set to do the same (`-testnet=1`).
+`--testnet` CLI option, Viacoin Core must be set to do the same (`-testnet=1`).
 clearinghoused may run with the `--testcoin` option on any blockchain,
 however.
 
-# Updating your requirements
-
-Sometimes the underlying package requirements may change for `clearinghoused`. If you build and installed it from scratch,
-you can manually update these requirements by executing something like:
-```
-    pip install --upgrade -r pip-requirements.txt 
-```
-
-# Test suite
-
-The test suite is invoked with `py.test` in the root directory of the repository.
-Viacoind testnet and mainnet must run on the default ports and use the same rpcuser and rpcpassword. 
-Do not include the following values ​​in clearinghoused.conf: bitcoind-rpc-connect, bitcoind-rpc-port, rpc-host, rpc-port and testnet.
 
 # Usage
 The command‐line syntax of clearinghoused is generally that of
@@ -81,29 +78,23 @@ balances or open orders.
 For a summary of the command‐line arguments and options, see
 `./clearinghoused.py --help`.
 
-# Versioning
-* Major version changes require a full rebuild of the database.
-* Minor version changes require a database reparse.
-* Most protocol changes are retroactive on testnet.
+The test suite is invoked with `py.test` in the root directory of the repository.
 
-## Input and Output
+
+### Input and Output
 * Quantities of divisible assets are written to eight decimal places.
 * Quantities of indivisible assets are written as integers.
 * All other quantities, i.e. prices, odds, leverages, feed values and target
-values, fee multipliers, are specified to four decimal places.
-* clearinghoused identifies an Order, Bet, Order Match or Bet Match by an
-‘Order ID’, ‘Bet ID’, ‘Order Match ID’, or ‘Bet Match ID’, respectively. Match
-IDs are concatenations of the hashes of the two transactions which compose the
-corresponding Match, in the order of their appearances in the blockchain.
+values, fee multipliers, are represented internally as fractions, but printed
+to four decimal places.
 
 
-## Examples
+### Example Usage
 The following examples are abridged for parsimony.
 
 * Server
 
-	The `server` command should always be running in the background. All other commands will fail if the index of the 
-	last block in the database is less than that of the last block seen by Viacoind.
+	The `server` command should always be running in the background (or another console). All other commands will fail if the index of the last block in the database is less than that of the last block seen by Viacoin Core.
 
 * Burn
 
@@ -117,7 +108,7 @@ The following examples are abridged for parsimony.
 	```
 
 * Buy VIA for XCH
-	
+
 	```
 	order --source=ttQheFaSfWELRB2MyMBaiWjdDm6ux9Ezns --get-quantity=10 --get-asset=VIA
 	--give-quantity=20 --give-asset=XCH --expiration=10 --fee=.001
@@ -131,15 +122,18 @@ The following examples are abridged for parsimony.
 	```
 
 * Buy XCH for BBBC
+ 
 	```
 	order --source=ttQheFaSfWELRB2MyMBaiWjdDm6ux9Ezns --get-quantity=10 --get-asset=XCH
 	--give-quantity=20 --give-asset=BBBC --expiration=10
 	```
 
 * VIAPay
+
 	```
-	VIApay --source=ttQheFaSfWELRB2MyMBaiWjdDm6ux9Ezns --order-match-id=092f15d36786136c4d868c33356ec3c9b5a0c77de54ed0e96a8dbdd8af160c23
+	btcpay --source=mtQheFaSfWELRB2MyMBaiWjdDm6ux9Ezns --order-match-id=092f15d36786136c4d868c33356ec3c9b5a0c77de54ed0e96a8dbdd8af160c23
 	```
+	Order Match ID can be obtained with the `pending` command.
 
 * Issue
 
@@ -148,6 +142,7 @@ The following examples are abridged for parsimony.
 	`issuance --source=ttQheFaSfWELRB2MyMBaiWjdDm6ux9Ezns --quantity=100 --asset='BBBQ' --divisible`
 
 * Broadcast
+
 	```
 	broadcast --source=ttQheFaSfWELRB2MyMBaiWjdDm6ux9Ezns --text="Viacoin price feed" --value=825.22
 	--fee-multiplier=0.001
@@ -184,7 +179,7 @@ The following examples are abridged for parsimony.
 	Open a Rock-Paper-Scissors like game with arbitrary possible moves (Must be an odd number greater or equal than 3). 
 	Until you make an rpsresolve transaction, your move is stored as an hash and keep secret.
 	
-	Example: Play rock-paper-scissors-spock-lizard (http://en.wikipedia.org/wiki/Rock-paper-scissors-lizard-Spock):
+	Example: Play [rock-paper-scissors-spock-lizard](http://en.wikipedia.org/wiki/Rock-paper-scissors-lizard-Spock):
 
 	```
 	rps --source=ttQheFaSfWELRB2MyMBaiWjdDm6ux9Ezns --possible-moves=5 --move=2 --wager=1 --expiration=100
@@ -198,7 +193,7 @@ The following examples are abridged for parsimony.
 
 * Cancel
 	```
-	cancel --source=-source=ttQheFaSfWELRB2MyMBaiWjdDm6ux9Ezns --offer-hash=092f15d36786136c4d868c33356ec3c9b5a0c77de54ed0e96a8dbdd8af160c23
+	cancel --source=mtQheFaSfWELRB2MyMBaiWjdDm6ux9Ezns --offer-hash=092f15d36786136c4d868c33356ec3c9b5a0c77de54ed0e96a8dbdd8af160c23
 	```
 
 * Dividend
