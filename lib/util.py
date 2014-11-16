@@ -1,3 +1,4 @@
+import os
 import time
 import decimal
 import sys
@@ -397,6 +398,39 @@ def database_check (db, blockcount):
     if last_block(db)['block_index'] + 1 < blockcount:
         raise exceptions.DatabaseError('{} database is behind Viacoind. Is the {} server running?'.format(config.XCP_NAME, config.XCP_CLIENT))
     return
+
+def database_snapshot(db, block_index):
+    logging.debug('Creating db snapshot at block %d' % block_index)
+    dbpath, dbname = os.path.split(config.DATABASE)
+    #clean up old snapshots
+    toremove = [f for f in os.listdir(dbpath) if (f.startswith('%s.' % dbname)
+                  and not f.startswith('%s.%d' % (dbname, block_index))
+                  and not f.startswith('%s.%d' % (dbname, block_index - 100)))]
+    for f in toremove:
+        os.unlink(os.path.join(dbpath, f))
+
+    snapdb = apsw.Connection('%s.%d' % (config.DATABASE, block_index))
+    with snapdb.backup('main', db, 'main') as backup:
+        while not backup.done:
+            backup.step(-1)
+
+def database_restore_snapshot(db, block_index):
+    logging.debug('Trying to restore DB snapshot for block %d' % block_index)
+    dbpath, dbname = os.path.split(config.DATABASE)
+    candidates = [f for f in os.listdir(dbpath) if f.startswith('%s.' % dbname)]
+    snapindex = block_index - (block_index % 100)
+    snapname = '%s.%d' % (dbname, snapindex)
+    if snapname in candidates:
+        logging.debug('Found DB snapshot at block %d, restoring' % snapindex)
+        snapdb = apsw.Connection(os.path.join(dbpath, snapname))
+        with db.backup('main', snapdb, 'main') as backup:
+            while not backup.done:
+                backup.step(-1)
+        return snapindex
+    else:
+        logging.debug('Suitable DB snapshot not found')
+        return -1
+
 
 def isodt (epoch_time):
     return datetime.fromtimestamp(epoch_time, tzlocal()).isoformat()

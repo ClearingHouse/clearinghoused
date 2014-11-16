@@ -918,6 +918,7 @@ def initialise(db):
                   ''')
 
     cursor.close()
+
 def get_tx_info (tx, block_index):
     """
     The destination, if it exists, always comes before the data output; the
@@ -1204,7 +1205,7 @@ def reparse (db, block_index=None, quiet=False):
         if block_index:
             cursor.execute('''DELETE FROM transactions WHERE block_index > ?''', (block_index,))
             cursor.execute('''DELETE FROM blocks WHERE block_index > ?''', (block_index,))
-            #TODO: Add notary stuff here
+            #TODO:
 
         # Reparse all blocks, transactions.
         if quiet:
@@ -1231,6 +1232,18 @@ def reparse (db, block_index=None, quiet=False):
 
     cursor.close()
     return
+
+def reorg(db, block_index):
+    # Handle reorg, try reverting to DB snapshot if configured so, resort to reparse if not or snapshot unavailable.
+    if not config.SHALLOW_REORG:
+        reparse(db, block_index, True)
+        return block_index + 1
+    snap_block_index = util.database_restore_snapshot(db, block_index)
+    if snap_block_index == -1:
+        reparse(db, block_index, True)
+        return block_index + 1
+    else:
+        return snap_block_index + 1
 
 def list_tx (db, block_hash, block_index, block_time, tx_hash, tx_index):
     # Get the important details about each transaction.
@@ -1357,8 +1370,9 @@ def follow (db):
                 util.message(db, block_index, 'reorg', None, {'block_index': c})
 
                 # Rollback the DB.
-                reparse(db, block_index=c-1, quiet=True)
-                block_index = c
+                cursor.close()
+                block_index = reorg(db, block_index=c-1)
+                cursor = db.cursor()
                 continue
 
             # Get and parse transactions in this block (atomically).
@@ -1397,6 +1411,9 @@ def follow (db):
             logging.info('Block: %s (%ss)'%(str(block_index), "{:.2f}".format(time.time() - starttime, 3)))
             # Increment block index.
             block_count = bitcoin.get_block_count()
+
+            if block_index % 100 == 0:
+                util.database_snapshot(db, block_index)
             block_index +=1
 
         else:
