@@ -35,7 +35,7 @@ def get_lock():
     # Cross‐platform.
     if os.name == 'nt': # Not database‐specific.
         socket_family = socket.AF_INET
-        socket_address = ('localhost', 8999)
+        socket_address = ('localhost', 7999)
         error = 'Another copy of {} is currently running.'.format(config.XCP_CLIENT)
     else:
         socket_family = socket.AF_UNIX
