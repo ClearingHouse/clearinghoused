@@ -1423,7 +1423,7 @@ def follow (db):
             # Increment block index.
             block_count = bitcoin.get_block_count()
 
-            if block_index % 100 == 0:
+            if block_index % 100 == 0 and block_index >= block_count - 200:
                 util.database_snapshot(db, block_index)
             block_index +=1
 
