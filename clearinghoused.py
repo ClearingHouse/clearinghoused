@@ -75,7 +75,7 @@ def get_address (db, address):
     address_dict['bet_match_expirations'] = util.api('get_bet_match_expirations', {'filters': [('tx0_address', '==', address), ('tx1_address', '==', address)], 'filterop': 'or'})
     address_dict['order_match_expirations'] = util.api('get_order_match_expirations', {'filters': [('tx0_address', '==', address), ('tx1_address', '==', address)], 'filterop': 'or'})
     address_dict['rps_match_expirations'] = util.api('get_rps_match_expirations', {'filters': [('tx0_address', '==', address), ('tx1_address', '==', address)], 'filterop': 'or'})
-    address_dict['documents'] = util.api('get_notary', {'filters': [('source', '==', address),]})
+    address_dict['documents'] = util.api('get_documents', {'filters': [('source', '==', address),]})
     # TODO: Add notary stuff
     return address_dict
 
@@ -590,6 +590,8 @@ if __name__ == '__main__':
     parser.add_argument('--rpc-password', help='required password (for rpc-user) to use the {} JSON-RPC API (via HTTP basic auth)'.format(config.XCP_CLIENT))
     parser.add_argument('--rpc-allow-cors', action='store_true', default=True, help='Allow ajax cross domain request')
 
+    parser.add_argument('--shallowreorg',action='store_true', help='use regular DB backups for faster reorg')
+
     subparsers = parser.add_subparsers(dest='action', help='the action to be taken')
 
     parser_server = subparsers.add_parser('server', help='run the server')
@@ -727,8 +729,6 @@ if __name__ == '__main__':
     parser_market = subparsers.add_parser('market', help='fill the screen with an always up-to-date summary of the {} market'.format(config.XCP_NAME) )
     parser_market.add_argument('--give-asset', help='only show orders offering to sell GIVE_ASSET')
     parser_market.add_argument('--get-asset', help='only show orders offering to buy GET_ASSET')
-
-    parser_softreorg = subparsers.add_parser('shallowreorg', help='use regular DB backups for faster reorg')
 
     args = parser.parse_args()
 
