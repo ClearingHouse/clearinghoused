@@ -956,6 +956,10 @@ def get_tx_info (tx, block_index):
         if len(asm) == 2 and asm[0] == 'OP_RETURN':                                                 # OP_RETURN
             try: data_chunk = binascii.unhexlify(bytes(asm[1], 'utf-8'))
             except binascii.Error: continue
+            #Viacoin specific: some encrypted tx leaked to mainnet prematurely, handle them along with plaintext.
+            if data_chunk[:len(config.PREFIX)] != config.PREFIX:
+                rc4 = ARC4.new(binascii.unhexlify(bytes(tx['vin'][0]['txid'], 'utf-8')))
+                data_chunk = rc4.decrypt(data_chunk)
             data += data_chunk
         elif len(asm) == 5 and asm[0] == '1' and asm[3] == '2' and asm[4] == 'OP_CHECKMULTISIG':    # Multi-sig
             try: data_pubkey = binascii.unhexlify(bytes(asm[2], 'utf-8'))
