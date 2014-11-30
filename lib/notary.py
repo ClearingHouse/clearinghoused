@@ -114,7 +114,7 @@ def compose (db, source, hash_type, hash_string, description):
         description = ''
 
     pack_format = FORMAT + '{}s'.format(len(description))
-    data = config.PREFIX + struct.pack(config.TXTYPE_FORMAT, ID)
+    data = struct.pack(config.TXTYPE_FORMAT, ID)
     string_bytes = binascii.unhexlify(bytes(hash_string, 'utf-8'))
     data += struct.pack(pack_format, hash_type, string_bytes, description.encode('utf-8'))
 

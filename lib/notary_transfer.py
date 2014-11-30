@@ -96,7 +96,7 @@ def compose (db, source, destination, hash_type, hash_string):
     if problems:
         raise exceptions.NotaryTransferError(problems)
 
-    data = config.PREFIX + struct.pack(config.TXTYPE_FORMAT, ID)
+    data = struct.pack(config.TXTYPE_FORMAT, ID)
     string_bytes = binascii.unhexlify(bytes(hash_string, 'utf-8'))
     data += struct.pack(FORMAT, hash_type, string_bytes)
 
