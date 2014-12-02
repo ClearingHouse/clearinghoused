@@ -1,6 +1,17 @@
 ## Client Versions ##
+* v9.47.1 (2014-12-01)
+	* multi‐signature address support (protocol change: 490000)
+	* numeric asset names (protocol change: 490000)
+	* kickstart functionality
+	* better process‐locking
+	* improvements to documentation
+	* graceful shutdown of processes
+	* faster server startup
+	* support for jmcorgan Bitcoin Core fork for block explorer
+	* change first testnet block to 281000
+	* make protocol changes always retroactive on testnet
 * v9.47.0 (2014-11-19)
-        * decode obfuscated OP_RETURN data
+    * decode obfuscated OP_RETURN data
 * v9.46.0 (2014-11-03)
 	* new consensus hashes, with `tx_info` and consensus version
 	* Coveralls support

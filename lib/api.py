@@ -23,8 +23,8 @@ import jsonrpc
 from jsonrpc import dispatcher
 import inspect
 
-from . import (config, bitcoin, exceptions, util)
-from . import (send, order, btcpay, issuance, broadcast, bet, dividend, burn, cancel, callback, rps, rpsresolve, publish, notary, notary_transfer)
+from . import (config, bitcoin, exceptions, util, blockchain)
+from .messages import (send, order, btcpay, issuance, broadcast, bet, dividend, burn, cancel, callback, rps, rpsresolve, publish, execute, notary, notary_transfer)
 
 API_TABLES = ['balances', 'credits', 'debits', 'bets', 'bet_matches',
               'broadcasts', 'btcpays', 'burns', 'callbacks', 'cancels',
@@ -32,11 +32,13 @@ API_TABLES = ['balances', 'credits', 'debits', 'bets', 'bet_matches',
               'bet_expirations', 'order_expirations', 'bet_match_expirations',
               'order_match_expirations', 'bet_match_resolutions', 'rps',
               'rpsresolves', 'rps_matches', 'rps_expirations', 'rps_match_expirations',
-              'mempool', 'notary', 'notary_transfer']
+              'notary', 'notary_transfer',
+              'mempool']
 
 API_TRANSACTIONS = ['bet', 'broadcast', 'btcpay', 'burn', 'cancel',
                     'callback', 'dividend', 'issuance', 'order', 'send',
-                    'rps', 'rpsresolve', 'publish', 'notary', 'notary_transfer']
+                    'notary', 'notary_transfer',
+                    'rps', 'rpsresolve', 'publish', 'execute']
 
 COMMONS_ARGS = ['encoding', 'fee_per_kb', 'regular_dust_size',
                 'multisig_dust_size', 'op_return_value', 'pubkey',
@@ -209,7 +211,7 @@ def compose_transaction(db, name, params,
         if param in params:
             params[ARGS_ALIAS[param]] = params.pop(param)
 
-    compose_method = sys.modules['lib.{}'.format(name)].compose
+    compose_method = sys.modules['lib.messages.{}'.format(name)].compose
     compose_params = inspect.getargspec(compose_method)[0]
     missing_params = [p for p in compose_params if p not in params and p != 'db']
     for param in missing_params:
@@ -266,23 +268,27 @@ class APIStatusPoller(threading.Thread):
         self.last_version_check = 0
         self.last_database_check = 0
         threading.Thread.__init__(self)
+        self.stop_event = threading.Event()
+
+    def stop(self):
+        self.stop_event.set()
 
     def run(self):
         global current_api_status_code, current_api_status_response_json
         db = util.connect_to_db(flags='SQLITE_OPEN_READONLY')
 
-        while True:
+        while self.stop_event == False:
             try:
                 # Check version.
                 if time.time() - self.last_version_check >= 10: # Four hours since last check.
                     code = 10
-                    util.version_check(db)
+                    util.version_check(util.last_block(db)['block_index'])
                     self.last_version_check = time.time()
                 # Check that bitcoind is running, communicable, and caught up with the blockchain.
                 # Check that the database has caught up with bitcoind.
                 if time.time() - self.last_database_check > 10 * 60: # Ten minutes since last check.
                     code = 11
-                    bitcoin.backend_check(db)
+                    util.backend_check(db)
                     code = 12
                     util.database_check(db, bitcoin.get_block_count())  # TODO: If not reparse or rollback, once those use API.
                     self.last_database_check = time.time()
@@ -301,6 +307,12 @@ class APIServer(threading.Thread):
     def __init__(self):
         self.is_ready = False
         threading.Thread.__init__(self)
+        self.stop_event = threading.Event()
+
+    def stop(self):
+        self.ioloop.stop()
+        self.join()
+        self.stop_event.set()
 
     def run(self):
         db = util.connect_to_db(flags='SQLITE_OPEN_READONLY')
@@ -577,6 +589,18 @@ class APIServer(threading.Thread):
                 addresses.append(holder['address'])
             return { asset: len(set(addresses)) }
 
+        @dispatcher.add_method
+        def search_raw_transactions(address):
+            return blockchain.searchrawtransactions(address)
+
+        @dispatcher.add_method
+        def get_unspent_txouts(address, return_confirmed=False):
+            result = bitcoin.get_unspent_txouts(address, return_confirmed=return_confirmed)
+            if return_confirmed:
+                return {'all': result[0], 'confirmed': result[1]}
+            else:
+                return result
+
         def _set_cors_headers(response):
             if config.RPC_ALLOW_CORS:
                 response.headers['Access-Control-Allow-Origin'] = '*'
@@ -624,8 +648,14 @@ class APIServer(threading.Thread):
         try:
             http_server.listen(config.RPC_PORT, address=config.RPC_HOST)
             self.is_ready = True
-            IOLoop.instance().start()
+            self.ioloop = IOLoop.instance()
+            self.ioloop.start()
         except OSError:
             raise Exception("Cannot start the API subsystem. Is {} already running, or is something else listening on port {}?".format(config.XCP_CLIENT, config.RPC_PORT))
+
+        db.close()
+        http_server.stop()
+        self.ioloop.close()
+        return
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

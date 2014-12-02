@@ -2,6 +2,6 @@
 	"minimum_version_major": 9,
 	"minimum_version_minor": 47,
 	"minimum_version_revision": 0,
-	"reason": "fixed op_return encoding",
-	"block_index": 420000
+	"reason": "numeric asset names; multi‐sig addresses",
+	"block_index": 490000
 }
