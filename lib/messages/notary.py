@@ -8,7 +8,7 @@ import struct
 import decimal
 import binascii
 
-from . import (config, util, exceptions, bitcoin, util)
+from lib import (config, util, exceptions, bitcoin, util)
 
 # H:HASH_TYPE
 # 32s: HASH

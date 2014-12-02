@@ -22,7 +22,7 @@ import requests
 import appdirs
 from prettytable import PrettyTable
 
-from lib import config, api, util, exceptions, bitcoin, blocks, blockchain, notary
+from lib import config, api, util, exceptions, bitcoin, blocks, blockchain
 if os.name == 'nt':
     from lib import util_windows
 
