@@ -8,7 +8,7 @@
 	* graceful shutdown of processes
 	* faster server startup
 	* support for jmcorgan Bitcoin Core fork for block explorer
-	* change first testnet block to 400000
+	* change first testnet block to 440000
 	* make protocol changes always retroactive on testnet
 * v9.47.0 (2014-11-19)
     * decode obfuscated OP_RETURN data
