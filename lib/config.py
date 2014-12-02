@@ -102,9 +102,9 @@ CHECKPOINTS_MAINNET = {
     400000: {'ledger_hash': 'f513bfeec7de32e40b1b8db2c480b999e59be77f994964651a52c83c993724d0', 'txlist_hash': '07c47d5ea69195760d9062975464ec83387e3fa0b99398c5fd551e6a3604f1f4'}
 }
 
-CONSENSUS_HASH_VERSION_TESTNET = 4
+CONSENSUS_HASH_VERSION_TESTNET = 5
 CHECKPOINTS_TESTNET = {
-    BLOCK_FIRST_TESTNET: {'ledger_hash': 'aea33abbef46277f76a2ec040bc98bd0a27bab2a2210386bd5b48cc8d5cfe750', 'txlist_hash': 'aea33abbef46277f76a2ec040bc98bd0a27bab2a2210386bd5b48cc8d5cfe750'},
+    BLOCK_FIRST_TESTNET: {'ledger_hash': '907a4d21c9d6972a12a701c82975f2e23facc12c8e5e0f12846d1944d04e2081', 'txlist_hash': '907a4d21c9d6972a12a701c82975f2e23facc12c8e5e0f12846d1944d04e2081'},
 }
 
 # Make DB snapshots every 100 blocks, try to use them to restore recent state on reorg to save reparse time.
