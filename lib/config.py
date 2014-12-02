@@ -106,3 +106,8 @@ CONSENSUS_HASH_VERSION_TESTNET = 4
 CHECKPOINTS_TESTNET = {
     BLOCK_FIRST_TESTNET: {'ledger_hash': 'aea33abbef46277f76a2ec040bc98bd0a27bab2a2210386bd5b48cc8d5cfe750', 'txlist_hash': 'aea33abbef46277f76a2ec040bc98bd0a27bab2a2210386bd5b48cc8d5cfe750'},
 }
+
+# Make DB snapshots every 100 blocks, try to use them to restore recent state on reorg to save reparse time.
+# Experimental, relevant for chains with high orphaning rate.
+# Set to True for clearinghoused, to False for upstream.
+SHALLOW_REORG = True
