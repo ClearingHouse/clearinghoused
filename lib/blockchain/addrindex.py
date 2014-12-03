@@ -1,8 +1,7 @@
 import decimal
 import time
-from lib import config, exceptions
+from lib import config, util, exceptions
 # Full name to resolve circular dependency
-import lib.bitcoin
 
 def check():
     pass
@@ -11,23 +10,26 @@ def getinfo():
     pass
 
 def getmempool():
-    rawtxlist = lib.bitcoin.rpc('getrawmempool', [])
+    rawtxlist = util.rpc('getrawmempool', [])
     txlist = []
     for rawtx in rawtxlist:
         try:
-            txlist.append(lib.bitcoin.rpc('getrawtransaction', [rawtx]))
+            txlist.append(util.rpc('getrawtransaction', [rawtx]))
         except exceptions.RPCError:
             pass
-    rv = [lib.bitcoin.rpc('decoderawtransaction', [tx]) for tx in txlist]
+    rv = [util.rpc('decoderawtransaction', [tx]) for tx in txlist]
     for tx in rv:
         tx['confirmations'] = 0
     return rv
+
+def searchrawtransactions(address):
+    return searchrawtx(address)
 
 def searchrawtx(address):
     rv = []
     idx = 0
     while True:
-        chunk = lib.bitcoin.rpc('searchrawtransactions', [address, 1, idx])
+        chunk = util.rpc('searchrawtransactions', [address, 1, idx])
         if not chunk:
             break
         rv += [t for t in chunk if 'confirmations' in t and t['confirmations']]
@@ -159,4 +161,4 @@ def getaddressinfo(address):
 # Unlike blockexplorers, does not provide 'spent' information on spent vouts.
 # This information is not used in clearblockd/clearinghoused anyway.
 def gettransaction(tx_hash):
-    return lib.bitcoin.rpc('getrawtransaction', [tx_hash, 1])
+    return util.rpc('getrawtransaction', [tx_hash, 1])
