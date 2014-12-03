@@ -660,7 +660,7 @@ if __name__ == '__main__':
 
 
     # Version
-    logging.info('Status: Running v{} of counterpartyd.'.format(config.VERSION_STRING, config.XCP_CLIENT))
+    logging.info('Status: Running v{} of clearinghoused.'.format(config.VERSION_STRING, config.XCP_CLIENT))
     if args.action in ('server', 'reparse', 'rollback') and not config.FORCE:
         logging.info('Status: Checking version.')
         try:

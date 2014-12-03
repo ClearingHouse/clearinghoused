@@ -39,7 +39,7 @@ saved in Viacoin Core’s configuration file.
 
 clearinghoused needs to know at least the JSON‐RPC password of the Viacoin Core
 with which it is supposed to communicate. The simplest way to set this is to
-include it in all command‐line invocations of counterpartyd, such as
+include it in all command‐line invocations of clearinghoused, such as
 `./counterpartyd.py --rpc-password=PASSWORD ACTION`. To make this and other
 options persistent across counterpartyd sessions, one may store the desired
 settings in a configuration file specific to clearinghoused.
