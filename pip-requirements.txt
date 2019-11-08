@@ -18,7 +18,7 @@ pytest==2.6.3
 
 pycoin==0.52
 
-requests==2.4.2
+requests==2.20.0
 
 Flask-HTTPAuth==2.3.0
 
